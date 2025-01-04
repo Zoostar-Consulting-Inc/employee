@@ -20,7 +20,7 @@ logs:
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    password: ${metadata.datasource.password:S3cret$}
+    password: ${metadata.datasource.password}
     url: jdbc:h2:mem:employee-db
     username: ${user.name}
   jpa:
