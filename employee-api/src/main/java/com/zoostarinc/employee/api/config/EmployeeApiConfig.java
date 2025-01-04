@@ -13,7 +13,7 @@ public class EmployeeApiConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addViewControllers(final ViewControllerRegistry registry) {
-		registry.addRedirectViewController("/employee-api", "/swagger-ui/index.html");
+		registry.addRedirectViewController("/", "/swagger-ui/index.html");
 	}
 
 	@Bean
