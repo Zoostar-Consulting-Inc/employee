@@ -30,7 +30,7 @@ public class EmployeeController {
 
 	@Autowired
 	ObjectMapper om;
-	
+
 	@Autowired
 	EmployeeService employeeManager;
 
@@ -40,14 +40,13 @@ public class EmployeeController {
 	public ResponseEntity<EmployeeResponse> postEmployee(@RequestBody EmployeeRequest request) {
 		var entity = employeeManager.create(new EmployeeRequestTransformer(request));
 		var response = new EmployeeModelTransformer(entity).transform();
-		return new SuccessfulRequestLoggerResponseEntity<>(response, request, om);
+		return new SuccessfulRequestLoggerResponseEntity<>(response, request, om, HttpStatus.CREATED);
 	}
 
 	@GetMapping(path = "/retrieve", produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<EmployeeResponse> getEmployeeByUsername(@RequestParam String username) {
 		return new ResponseEntity<>(
-				new EmployeeModelTransformer(employeeManager.retrieveByUsername(username)).transform(),
-				HttpStatus.OK);
+				new EmployeeModelTransformer(employeeManager.retrieveByUsername(username)).transform(), HttpStatus.OK);
 	}
 
 	@PutMapping(path = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
