@@ -10,7 +10,7 @@
 	<artifactId>employee-api</artifactId>
 	<packaging>war</packaging>
 	<build>
-		<finalName>employee</finalName>
+		<finalName>employee-api</finalName>
 	</build>
 	<dependencies>
 		<dependency>
