@@ -6,7 +6,7 @@ pipeline {
 			steps {
 				script {
 					if("opened" == "$action" || "synchronize" == "$action" || "edited" == "$action") {
-						bat 'mvn -B clean verify'
+						bat 'mvn -B deploy'
 					}
 				}
 			}
@@ -15,7 +15,7 @@ pipeline {
 			steps {
 				script {
 					if("closed" == "$action" && "develop" == "$target") {
-						bat 'mvn -B clean deploy'
+						bat 'mvn -B deploy'
 					}
 				}
 			}
