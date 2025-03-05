@@ -1,6 +1,5 @@
 package com.zoostarinc.employee.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -11,40 +10,36 @@ import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
 
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.common.core.Transformer;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
 	public static final String REQUIRED_FIELD_MISSING_ERROR_MSG = "Required field [username] is missing in request!";
 
-	@Autowired
-	EmployeeRepository employeeRepository;
+	final EmployeeRepository employeeRepository;
 
 	@Override
 	@Transactional
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		
-		EmployeeEntity entity = null;
-		try {
-			entity = retrieveByUsername(employee.getUsername());
-			if(entity != null) {
-				throw new DuplicateKeyException(String.format("Employee exists with username: [%s]", employee.getUsername()));
-			}
-		} catch (IllegalArgumentException e) {
-			log.info("Creating new employee: {}", employee);
-			entity = new EmployeeEntity();
-			entity.setEmail(employee.getEmail());
-			entity.setFirstName(employee.getFirstName());
-			entity.setLastName(employee.getLastName());
-			entity.setUsername(employee.getUsername());
-			entity = employeeRepository.save(entity);
+		var value = employeeRepository.findByUsername(employee.getUsername());
+		if (value.isPresent()) {
+			throw new DuplicateKeyException(
+					String.format("Employee exists with username: [%s]", employee.getUsername()));
 		}
 
-		return entity;
+		log.info("Creating new employee: {}", employee);
+		var entity = new EmployeeEntity();
+		entity.setEmail(employee.getEmail());
+		entity.setFirstName(employee.getFirstName());
+		entity.setLastName(employee.getLastName());
+		entity.setUsername(employee.getUsername());
+		return employeeRepository.save(entity);
 	}
 
 	@Override
@@ -53,8 +48,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 
-		return employeeRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalArgumentException(String.format("No employee found by username: [%s]", username)));
+		return employeeRepository.findByUsername(username).orElseThrow(
+				() -> new IllegalArgumentException(String.format("No employee found by username: [%s]", username)));
 	}
 
 	@Override

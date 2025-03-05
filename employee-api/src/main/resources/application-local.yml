@@ -10,7 +10,6 @@ server:
 logging:
   level:
     root: info
-    '[com.zoostarinc]': trace
     '[net.zoostar]': trace
 
 logs:

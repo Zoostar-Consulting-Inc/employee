@@ -14,21 +14,31 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "EMPLOYEE")
 @ToString(callSuper = true)
 public class EmployeeEntity extends Employee implements Persistable<UUID> {
 
 	private UUID id;
 
+	public EmployeeEntity(UUID id) {
+		this.id = id;
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	public UUID getId() {
 		return this.id;
+	}
+	
+	protected void setId(UUID id) {
+		this.id = id;
 	}
 
 	@Override

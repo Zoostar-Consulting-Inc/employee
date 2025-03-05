@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,10 +23,13 @@ import com.zoostarinc.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import net.zoostar.common.aop.Timeable;
 import net.zoostar.common.core.Transformer;
 import net.zoostar.common.web.response.SuccessfulRequestLoggerResponseEntity;
 
+@Timeable
 @RestController
+@RequestMapping("/api")
 public class EmployeeController {
 
 	@Autowired
@@ -38,12 +42,13 @@ public class EmployeeController {
 			@ApiResponse(responseCode = "400", description = "Bad data provided. Fix and retry.") })
 	@PostMapping(path = "/create", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<EmployeeResponse> postEmployee(@RequestBody EmployeeRequest request) {
-		var entity = employeeManager.create(new EmployeeRequestTransformer(request));
-		var response = new EmployeeModelTransformer(entity).transform();
-		return new SuccessfulRequestLoggerResponseEntity<>(response, request, om, HttpStatus.CREATED);
+		return new SuccessfulRequestLoggerResponseEntity<>(
+				new EmployeeModelTransformer(employeeManager.create(new EmployeeRequestTransformer(request)))
+						.transform(),
+				request, om, HttpStatus.CREATED);
 	}
 
-	@GetMapping(path = "/retrieve", produces = APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/retrieveByUsername", produces = APPLICATION_JSON_VALUE)
 	public ResponseEntity<EmployeeResponse> getEmployeeByUsername(@RequestParam String username) {
 		return new ResponseEntity<>(
 				new EmployeeModelTransformer(employeeManager.retrieveByUsername(username)).transform(), HttpStatus.OK);
