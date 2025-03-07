@@ -8,6 +8,7 @@ import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
+import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -29,17 +30,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 		var employee = transformer.transform();
 		var value = employeeRepository.findByUsername(employee.getUsername());
 		if (value.isPresent()) {
-			throw new DuplicateKeyException(
-					String.format("Employee exists with username: [%s]", employee.getUsername()));
+			throw new DuplicateKeyException("Employee exists with given username!");
 		}
 
 		log.info("Creating new employee: {}", employee);
-		var entity = new EmployeeEntity();
-		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
-		entity.setUsername(employee.getUsername());
-		return employeeRepository.save(entity);
+		return employeeRepository.save(new EmployeeTransformer(employee).transform());
 	}
 
 	@Override
@@ -48,8 +43,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 
-		return employeeRepository.findByUsername(username).orElseThrow(
-				() -> new IllegalArgumentException(String.format("No employee found by username: [%s]", username)));
+		return employeeRepository.findByUsername(username)
+				.orElseThrow(() -> new IllegalArgumentException("No employee found by given username!"));
 	}
 
 	@Override

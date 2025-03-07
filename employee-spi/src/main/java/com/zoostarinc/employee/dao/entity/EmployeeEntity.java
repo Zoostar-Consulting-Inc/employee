@@ -36,10 +36,6 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	public UUID getId() {
 		return this.id;
 	}
-	
-	protected void setId(UUID id) {
-		this.id = id;
-	}
 
 	@Override
 	public String getEmail() {
