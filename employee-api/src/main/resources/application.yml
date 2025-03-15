@@ -2,8 +2,3 @@ spring:
   profiles:
     active:
       - local
-
-springdoc:
-  swagger-ui:
-    disable-swagger-default-url: true
-    path: /employee-api
