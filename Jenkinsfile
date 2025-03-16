@@ -6,7 +6,7 @@ pipeline {
 			steps {
 				script {
 					if("opened" == "$action" || "synchronize" == "$action" || "edited" == "$action") {
-						bat 'mvn -B verify -Dgpg.skip'
+						bat 'mvn -B verify -DskipTests'
 					}
 				}
 			}
@@ -16,7 +16,7 @@ pipeline {
 				script {
 					if(("closed" == "$action" && "master" == "$target" && "develop" != "$target") ||
 							("closed" == "$action" && "develop" == "$target")) {
-						bat 'mvn -B deploy -Dgpg.skip'
+						bat 'mvn -B deploy -DskipTests'
 					}
 				}
 			}
