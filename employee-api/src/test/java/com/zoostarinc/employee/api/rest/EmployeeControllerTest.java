@@ -72,6 +72,14 @@ class EmployeeControllerTest {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		var value = om.readValue(response.getContentAsString(), EmployeeResponse.class);
 		assertThat(value).isNotNull();
+		
+		var comparableEntity = new EmployeeEntity();
+		comparableEntity.setEmail(entity.getEmail());
+		comparableEntity.setFirstName(entity.getFirstName());
+		comparableEntity.setLastName(entity.getLastName());
+		comparableEntity.setUsername(entity.getUsername());
+		assertThat(comparableEntity).isEqualTo(entity).hasSameHashCodeAs(entity);
+		assertThat(!entity.isNew() && comparableEntity.isNew()).isTrue();
 	}
 
 	@Test
