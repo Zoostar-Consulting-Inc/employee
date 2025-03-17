@@ -38,6 +38,7 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	}
 
 	@Override
+	@Column(name = "EMAIL")
 	public String getEmail() {
 		return super.getEmail();
 	}
@@ -55,6 +56,7 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	}
 
 	@Override
+	@Column(name = "USERNAME")
 	public String getUsername() {
 		return super.getUsername();
 	}
