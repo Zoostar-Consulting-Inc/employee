@@ -17,12 +17,12 @@ logs:
     dir: logs
     
 spring:
-  autoconfigure:
-    exclude:
+#  autoconfigure:
+#    exclude:
       ## properties to add to skip security during tests
-      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-      - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
-      - org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration
+#      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+#      - org.springframework.boot.autoconfigure.security.reactive.ReactiveSecurityAutoConfiguration
+#      - org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration
   datasource:
     driver-class-name: org.h2.Driver
     password: ${employee.datasource.password}

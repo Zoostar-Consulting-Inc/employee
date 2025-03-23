@@ -1,7 +1,5 @@
 package com.zoostarinc.employee.transform.impl;
 
-import java.util.UUID;
-
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.model.Employee;
 
@@ -19,7 +17,7 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 
 	@Override
 	public EmployeeEntity transform() {
-		var entity = new EmployeeEntity(UUID.randomUUID());
+		var entity = new EmployeeEntity();
 		entity.setEmail(employee.getEmail());
 		entity.setFirstName(employee.getFirstName());
 		entity.setLastName(employee.getLastName());

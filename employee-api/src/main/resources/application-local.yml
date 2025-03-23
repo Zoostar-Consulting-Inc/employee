@@ -20,9 +20,10 @@ spring:
   datasource:
     driver-class-name: org.h2.Driver
     password: ${employee.datasource.password}
-    url: jdbc:h2:~/data/h2/employee
+    url: jdbc:h2:./data/employee
     username: spring-boot-local
   jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     open-in-view: false
     show-sql: true
@@ -32,8 +33,6 @@ spring:
     init:
       mode: always
       platform: h2
-      schema-locations: classpath*:schema-h2.sql
-
   security:
     oauth2:
       client:

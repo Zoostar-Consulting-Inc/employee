@@ -2,6 +2,7 @@ package com.zoostarinc.employee.api.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -65,14 +66,16 @@ class EmployeeControllerTest {
 		when(employeeRepository.save(entity)).thenReturn(entity);
 
 		// when
-		var response = api.perform(post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.content(om.writeValueAsString(request))).andReturn().getResponse();
+		var response = api
+				.perform(post(url).contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
 		var value = om.readValue(response.getContentAsString(), EmployeeResponse.class);
 		assertThat(value).isNotNull();
-		
+
 		var comparableEntity = new EmployeeEntity();
 		comparableEntity.setEmail(entity.getEmail());
 		comparableEntity.setFirstName(entity.getFirstName());
@@ -90,8 +93,10 @@ class EmployeeControllerTest {
 		request.setEmail("");
 
 		// when
-		var response = api.perform(post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.content(om.writeValueAsString(request))).andReturn().getResponse();
+		var response = api
+				.perform(post(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -111,8 +116,10 @@ class EmployeeControllerTest {
 		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(entity));
 
 		// when
-		var response = api.perform(post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.content(om.writeValueAsString(request))).andReturn().getResponse();
+		var response = api
+				.perform(post(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -128,7 +135,8 @@ class EmployeeControllerTest {
 		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.of(entity));
 
 		// when
-		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+		var response = api.perform(get(url.toString()).with(oidcLogin()).accept(MediaType.APPLICATION_JSON)).andReturn()
+				.getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
@@ -146,7 +154,8 @@ class EmployeeControllerTest {
 		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.of(entity));
 
 		// when
-		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+		var response = api.perform(get(url.toString()).with(oidcLogin()).accept(MediaType.APPLICATION_JSON)).andReturn()
+				.getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -162,7 +171,8 @@ class EmployeeControllerTest {
 		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.empty());
 
 		// when
-		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+		var response = api.perform(get(url.toString()).with(oidcLogin()).accept(MediaType.APPLICATION_JSON)).andReturn()
+				.getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
@@ -183,8 +193,10 @@ class EmployeeControllerTest {
 		when(employeeRepository.save(entity)).thenReturn(entity);
 
 		// when
-		var response = api.perform(put(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-				.content(om.writeValueAsString(request))).andReturn().getResponse();
+		var response = api
+				.perform(put(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());

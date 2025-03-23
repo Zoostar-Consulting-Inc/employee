@@ -1,6 +1,7 @@
 package com.zoostarinc.employee.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -40,11 +41,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Override
 	public EmployeeEntity retrieveByUsername(String username) {
 		if (!StringUtils.hasText(username)) {
-			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
+			throw new EmptyResultDataAccessException(REQUIRED_FIELD_MISSING_ERROR_MSG, 1);
 		}
 
 		return employeeRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalArgumentException("No employee found by given username!"));
+				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given username!", 1));
 	}
 
 	@Override
