@@ -1,4 +1,11 @@
 # --- Application specific properties per environment ---
+logging:
+  level:
+    root: info
+    '[net.zoostar]': trace
+  file:
+    name: logs/@project.build.finalName@.log
+
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -27,15 +34,6 @@ spring:
 # --- xxx ---
 
 #--- Spring Boot specific properties ---
-logging:
-  level:
-    root: info
-    '[net.zoostar]': trace
-
-logs:
-  base:
-    dir: logs
-
 server:
   compression:
     enabled: true
