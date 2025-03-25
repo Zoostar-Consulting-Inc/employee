@@ -29,7 +29,7 @@ spring:
         registration:
           google:
             clientId: 547141362195-p1jmnki19qbp67nfvblbl3b7gk2oj4fl.apps.googleusercontent.com
-            clientSecret: ${client.secret.google}
+            clientSecret: ${employee.google.secret}
             scope: openid,profile,email
 # --- xxx ---
 

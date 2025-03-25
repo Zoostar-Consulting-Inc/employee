@@ -1,10 +1,7 @@
 # --- Application specific properties per environment ---
-logging:
-  level:
-    root: info
-    '[net.zoostar]': trace
-  file:
-    name: logs/@project.build.finalName@.log
+logs:
+  base:
+    dir: logs
 
 spring:
   datasource:
@@ -23,12 +20,4 @@ spring:
       mode: always
       platform: h2
       schema-locations: classpath*:schema-h2.sql
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            clientId: 547141362195-p1jmnki19qbp67nfvblbl3b7gk2oj4fl.apps.googleusercontent.com
-            clientSecret: ${client.secret.google}
-            scope: openid,profile,email
 # --- xxx ---

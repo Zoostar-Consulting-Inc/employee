@@ -11,10 +11,8 @@ logging:
   level:
     root: info
     '[net.zoostar]': trace
-
-logs:
-  base:
-    dir: logs
+  file:
+    name: logs/junit.log
     
 spring:
 #  autoconfigure:

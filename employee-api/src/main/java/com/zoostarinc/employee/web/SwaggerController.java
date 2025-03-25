@@ -32,7 +32,7 @@ public class SwaggerController {
 			log.info("Welcome back {}!", user.getGivenName());
 		}
 		
-		String swaggerUrl = "/swagger-ui/index.html";
+		String swaggerUrl = "swagger-ui/index.html";
 		log.info("Loading Swagger URL at: {}...", swaggerUrl);
 		return new RedirectView(swaggerUrl);
 	}
