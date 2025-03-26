@@ -36,45 +36,30 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	public UUID getId() {
 		return this.id;
 	}
-//	public void setId(UUID id) {
-//		this.id = id;
-//	}
 
 	@Override
 	@Column(name = "EMAIL", length = 50)
 	public String getEmail() {
 		return super.getEmail();
 	}
-//	public void setEmail(String email) {
-//		super.setEmail(email);
-//	}
 
 	@Override
 	@Column(name = "FIRST_NAME", length = 50)
 	public String getFirstName() {
 		return super.getFirstName();
 	}
-//	public void setFirstName(String firstName) {
-//		super.setFirstName(firstName);
-//	}
 
 	@Override
 	@Column(name = "LAST_NAME", length = 50)
 	public String getLastName() {
 		return super.getLastName();
 	}
-//	public void setLastName(String lastName) {
-//		super.setLastName(lastName);
-//	}
 
 	@Override
 	@Column(name = "USERNAME", length = 50)
 	public String getUsername() {
 		return super.getUsername();
 	}
-//	public void setUsername(String username) {
-//		super.setUsername(username);
-//	}
 	
 	@Override
 	@Transient

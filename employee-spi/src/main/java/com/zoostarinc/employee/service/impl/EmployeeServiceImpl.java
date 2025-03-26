@@ -48,16 +48,4 @@ public class EmployeeServiceImpl implements EmployeeService {
 				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given username!", 1));
 	}
 
-	@Override
-	@Transactional
-	public EmployeeEntity update(Transformer<Employee> transformer) {
-		var employee = transformer.transform();
-		var entity = retrieveByUsername(employee.getUsername());
-		log.info("Updating existing employee: {}", entity);
-		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
-		return entity;
-	}
-
 }

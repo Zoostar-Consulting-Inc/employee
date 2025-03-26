@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class SwaggerController {
 
+	private static final String SWAGGER_URL = "swagger-ui/index.html";
+	
 	final EmployeeService employeeManager;
 	
 	@GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
@@ -32,9 +34,8 @@ public class SwaggerController {
 			log.info("Welcome back {}!", user.getGivenName());
 		}
 		
-		String swaggerUrl = "swagger-ui/index.html";
-		log.info("Loading Swagger URL at: {}...", swaggerUrl);
-		return new RedirectView(swaggerUrl);
+		log.info("Loading Swagger UI at: {}...", SWAGGER_URL);
+		return new RedirectView(SWAGGER_URL);
 	}
 
 }

@@ -11,6 +11,4 @@ public interface EmployeeService {
 
 	EmployeeEntity retrieveByUsername(String username);
 
-	EmployeeEntity update(Transformer<Employee> transformer);
-
 }

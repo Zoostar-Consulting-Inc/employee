@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -21,7 +19,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zoostarinc.employee.api.request.EmployeeRequest;
 import com.zoostarinc.employee.api.response.EmployeeResponse;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
@@ -49,80 +46,6 @@ class EmployeeControllerTest {
 		entity.setFirstName("Dev");
 		entity.setLastName("Ops");
 		entity.setUsername("zoostar");
-	}
-
-	@Test
-	void testPostEmployee201() throws Exception {
-		// given
-		String url = "/api/create";
-		var request = new EmployeeRequest();
-		request.setEmail(entity.getEmail());
-		request.setFirstName(entity.getFirstName());
-		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
-
-		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.empty());
-		when(employeeRepository.save(entity)).thenReturn(entity);
-
-		// when
-		var response = api
-				.perform(post(url).contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
-				.andReturn().getResponse();
-
-		// then
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-		var value = om.readValue(response.getContentAsString(), EmployeeResponse.class);
-		assertThat(value).isNotNull();
-
-		var comparableEntity = new EmployeeEntity();
-		comparableEntity.setEmail(entity.getEmail());
-		comparableEntity.setFirstName(entity.getFirstName());
-		comparableEntity.setLastName(entity.getLastName());
-		comparableEntity.setUsername(entity.getUsername());
-		assertThat(comparableEntity).isEqualTo(entity).hasSameHashCodeAs(entity);
-		assertThat(!entity.isNew() && comparableEntity.isNew()).isTrue();
-	}
-
-	@Test
-	void testPostEmptyUsername400() throws Exception {
-		// given
-		String url = "/api/create";
-		var request = new EmployeeRequest();
-		request.setEmail("");
-
-		// when
-		var response = api
-				.perform(post(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
-				.andReturn().getResponse();
-
-		// then
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-	}
-
-	@Test
-	void testPostDuplicateEmployee400() throws Exception {
-		// given
-		String url = "/api/create";
-		var request = new EmployeeRequest();
-		request.setEmail(entity.getEmail());
-		request.setFirstName(entity.getFirstName());
-		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
-
-		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(entity));
-
-		// when
-		var response = api
-				.perform(post(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
-				.andReturn().getResponse();
-
-		// then
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
 	}
 
 	@Test
@@ -176,32 +99,6 @@ class EmployeeControllerTest {
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
-	}
-
-	@Test
-	void testPutEmployee200() throws Exception {
-		// given
-		String url = "/api/update";
-		var request = new EmployeeRequest();
-		request.setEmail(entity.getEmail());
-		request.setFirstName(entity.getFirstName());
-		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
-
-		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(entity));
-		when(employeeRepository.save(entity)).thenReturn(entity);
-
-		// when
-		var response = api
-				.perform(put(url).with(oidcLogin()).contentType(MediaType.APPLICATION_JSON)
-						.accept(MediaType.APPLICATION_JSON).content(om.writeValueAsString(request)))
-				.andReturn().getResponse();
-
-		// then
-		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		var value = om.readValue(response.getContentAsString(), EmployeeResponse.class);
-		assertThat(value).isNotNull();
 	}
 
 }
