@@ -9,8 +9,6 @@ import lombok.ToString;
 @ToString
 public class Employee {
 
-	private String username;
-	
 	private String email;
 	
 	private String firstName;

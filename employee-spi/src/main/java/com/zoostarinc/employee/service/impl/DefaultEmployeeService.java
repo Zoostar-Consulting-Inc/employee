@@ -7,7 +7,7 @@ import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
-import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
+import com.zoostarinc.employee.transformer.impl.EmployeeTransformer;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -17,7 +17,7 @@ import net.zoostar.common.core.Transformer;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class EmployeeServiceImpl implements EmployeeService {
+public class DefaultEmployeeService implements EmployeeService {
 
 	public static final String REQUIRED_FIELD_MISSING_ERROR_MSG = "Required field [username] is missing in request!";
 
@@ -27,7 +27,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Transactional
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		var value = employeeRepository.findByUsername(employee.getUsername());
+		var value = employeeRepository.findByEmail(employee.getEmail());
 		if (value.isPresent()) {
 			throw new DuplicateKeyException("Employee exists with given username!");
 		}

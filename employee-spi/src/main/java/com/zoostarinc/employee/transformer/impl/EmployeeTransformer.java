@@ -1,4 +1,4 @@
-package com.zoostarinc.employee.transform.impl;
+package com.zoostarinc.employee.transformer.impl;
 
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.model.Employee;
@@ -18,10 +18,9 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 	@Override
 	public EmployeeEntity transform() {
 		var entity = new EmployeeEntity();
-		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
-		entity.setUsername(employee.getUsername());
+		entity.setEmail(employee.getEmail().trim().toLowerCase());
+		entity.setFirstName(employee.getFirstName() != null ? employee.getFirstName().trim() : "");
+		entity.setLastName(employee.getLastName() != null ? employee.getLastName().trim() : "");
 		log.info("Employee Entity: {}", entity);
 		return entity;
 	}
