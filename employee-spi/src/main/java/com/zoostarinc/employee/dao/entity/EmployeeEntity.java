@@ -2,8 +2,6 @@ package com.zoostarinc.employee.dao.entity;
 
 import java.util.UUID;
 
-import org.springframework.data.domain.Persistable;
-
 import com.zoostarinc.employee.model.Employee;
 
 import jakarta.persistence.Column;
@@ -12,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,7 +19,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "EMPLOYEE")
 @ToString(callSuper = true)
-public class EmployeeEntity extends Employee implements Persistable<UUID> {
+public class EmployeeEntity extends Employee {
 
 	private UUID id;
 
@@ -52,12 +49,6 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	@Column(name = "LAST_NAME", length = 50)
 	public String getLastName() {
 		return super.getLastName();
-	}
-	
-	@Override
-	@Transient
-	public boolean isNew() {
-		return id == null;
 	}
 
 }

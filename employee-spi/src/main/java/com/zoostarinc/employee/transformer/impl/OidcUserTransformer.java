@@ -18,13 +18,13 @@ public class OidcUserTransformer implements Transformer<Employee> {
 	@Override
 	public Employee transform() {
 		if(user == null || !StringUtils.hasText(user.getEmail())) {
-			throw new NullPointerException("Required value for field email is missing!");
+			throw new IllegalArgumentException("Required value for field email is missing!");
 		}
 		
 		var employee = new Employee();
 		employee.setEmail(user.getEmail().trim().toLowerCase());
-		employee.setFirstName(user.getGivenName() != null ? user.getGivenName().trim() : "");
-		employee.setLastName(user.getFamilyName() != null ? user.getFamilyName().trim() : "");
+		employee.setFirstName(user.getGivenName() == null ? "" : user.getGivenName().trim());
+		employee.setLastName(user.getFamilyName() == null ? "" : user.getFamilyName().trim());
 		return employee;
 	}
 

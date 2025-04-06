@@ -5,14 +5,15 @@ import java.util.Map;
 
 import com.zoostarinc.timesheet.model.Timesheet;
 
-import lombok.NoArgsConstructor;
 import net.zoostar.common.core.workflow.Action;
-import net.zoostar.common.core.workflow.State;
 
-@NoArgsConstructor
-public class StateNew implements State<Timesheet> {
+public class StateNew extends AbstractTimesheetState {
 
 	public static final String NAME = "New";
+
+	public StateNew() {
+		super(NAME);
+	}
 	
 	@Override
 	public Map<String, Action<Timesheet>> getActions() {

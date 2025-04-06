@@ -18,9 +18,9 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 	@Override
 	public EmployeeEntity transform() {
 		var entity = new EmployeeEntity();
-		entity.setEmail(employee.getEmail().trim().toLowerCase());
-		entity.setFirstName(employee.getFirstName() != null ? employee.getFirstName().trim() : "");
-		entity.setLastName(employee.getLastName() != null ? employee.getLastName().trim() : "");
+		entity.setEmail(employee.getEmail());
+		entity.setFirstName(employee.getFirstName());
+		entity.setLastName(employee.getLastName());
 		log.info("Employee Entity: {}", entity);
 		return entity;
 	}

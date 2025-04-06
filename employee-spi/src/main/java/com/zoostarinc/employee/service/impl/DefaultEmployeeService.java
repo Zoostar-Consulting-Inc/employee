@@ -27,8 +27,8 @@ public class DefaultEmployeeService implements EmployeeService {
 	@Transactional
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		var value = employeeRepository.findByEmail(employee.getEmail());
-		if (value.isPresent()) {
+		var object = employeeRepository.findByEmail(employee.getEmail());
+		if (object.isPresent()) {
 			throw new DuplicateKeyException("Employee exists with given username!");
 		}
 
