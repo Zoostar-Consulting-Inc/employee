@@ -18,12 +18,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 
 import net.zoostar.common.core.workflow.State;
 import net.zoostar.common.core.workflow.timesheet.state.StateNew;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
@@ -32,13 +34,13 @@ public abstract class AbstractTestHarness {
 	protected static OidcUserInfo userInfo;
 
 	protected static OidcUser user;
-	
+
 	protected ObjectMapper om = objectMapper();
 
 	protected Employee employee = employee("devops@zoostar.net", "Dev", "Ops");
-	
+
 	protected EmployeeEntity persistableEmployeeEntity = employeeEntity(null, employee);
-	
+
 	protected EmployeeEntity persistentEmployeeEntity = employeeEntity(UUID.randomUUID(), employee);
 
 	@MockBean
@@ -46,7 +48,7 @@ public abstract class AbstractTestHarness {
 
 	@Autowired
 	protected MockMvc endpoint;
-	
+
 	protected Employee employee(String email, String firstName, String lastName) {
 		return new Employee(email, firstName, lastName);
 	}
@@ -58,11 +60,11 @@ public abstract class AbstractTestHarness {
 		entity.setLastName(employee.getLastName());
 		return entity;
 	}
-	
+
 	protected ObjectMapper objectMapper() {
 		var bean = new ObjectMapper();
-		bean.registerModule(new Jdk8Module()).registerModule(new SimpleModule().addAbstractTypeMapping(State.class,
-				StateNew.class));
+		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module())
+				.registerModule(new SimpleModule().addAbstractTypeMapping(State.class, StateNew.class));
 		bean.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		return bean;
 	}

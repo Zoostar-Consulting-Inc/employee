@@ -1,5 +1,9 @@
 package com.zoostarinc.employee.service.impl;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,8 @@ import net.zoostar.common.core.workflow.timesheet.state.StateNew;
 @Service
 @AllArgsConstructor
 public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService {
+	
+	public static final int DEFAULT_WEEKLY_HOURS = 40;
 
 	private final EmployeeRepository employeeRepository;
 
@@ -24,11 +30,13 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 		if (value.isEmpty()) {
 			throw new EmptyResultDataAccessException("No results found for given employee!", 1);
 		}
-		
+
 		var state = new StateNew();
 		var timesheet = new Timesheet();
 		timesheet.setEmployee(value.get());
 		timesheet.setState(state);
+		timesheet.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
+		timesheet.setHours(DEFAULT_WEEKLY_HOURS);
 		return timesheet;
 	}
 

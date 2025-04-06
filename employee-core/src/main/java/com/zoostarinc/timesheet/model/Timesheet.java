@@ -1,5 +1,7 @@
 package com.zoostarinc.timesheet.model;
 
+import java.time.LocalDate;
+
 import com.zoostarinc.employee.model.Employee;
 
 import lombok.Getter;
@@ -16,6 +18,10 @@ import net.zoostar.common.core.workflow.Workflowable;
 public class Timesheet implements Workflowable<Timesheet> {
 
 	private Employee employee;
+	
+	private int hours;
+	
+	private LocalDate weekEnding;
 
 	private State<Timesheet> state;
 	

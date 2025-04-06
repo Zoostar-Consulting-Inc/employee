@@ -5,6 +5,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -12,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import com.zoostarinc.employee.config.AbstractTestHarness;
+import com.zoostarinc.employee.service.impl.DefaultTimesheetWorkflowService;
 import com.zoostarinc.timesheet.model.Timesheet;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +44,10 @@ class TimesheetRestControllerTest extends AbstractTestHarness {
 		assertThat(timesheet.getEmployee()).isNotNull();
 		assertThat(AbstractTimesheetState.STATE_NEW).isEqualTo(timesheet.getState())
 				.hasSameHashCodeAs(timesheet.getState());
+		assertThat(timesheet.getHours()).isEqualTo(DefaultTimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
+
+		var weekEnding = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+		assertThat(timesheet.getWeekEnding()).isEqualTo(weekEnding);
 	}
 
 	@Test
