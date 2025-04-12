@@ -10,5 +10,5 @@ import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 public interface EmployeeRepository extends CrudRepository<EmployeeEntity, UUID> {
 
 	Optional<EmployeeEntity> findByEmail(String email);
-	
+
 }

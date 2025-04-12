@@ -1,6 +1,7 @@
 package com.zoostarinc.employee.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
@@ -34,6 +35,15 @@ public class DefaultEmployeeService implements EmployeeService {
 
 		log.info("Creating new employee: {}", employee);
 		return employeeRepository.save(new EmployeeTransformer(employee).transform());
+	}
+
+	@Override
+	public EmployeeEntity retrieveByEmail(String email) {
+		var object = employeeRepository.findByEmail(email);
+		if(object.isEmpty()) {
+			throw new EmptyResultDataAccessException("No Employee found!", 1);
+		}
+		return object.get();
 	}
 
 }

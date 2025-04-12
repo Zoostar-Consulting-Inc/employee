@@ -9,4 +9,6 @@ public interface EmployeeService {
 
 	EmployeeEntity create(Transformer<Employee> transformer);
 
+	EmployeeEntity retrieveByEmail(String email);
+
 }

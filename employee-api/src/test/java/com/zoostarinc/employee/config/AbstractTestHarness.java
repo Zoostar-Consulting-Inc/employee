@@ -1,5 +1,6 @@
 package com.zoostarinc.employee.config;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,10 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -22,9 +26,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
+import com.zoostarinc.timesheet.model.Timesheet;
 
 import net.zoostar.common.core.workflow.State;
-import net.zoostar.common.core.workflow.timesheet.state.StateNew;
+import net.zoostar.common.core.workflow.timesheet.state.TimesheetState;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -63,9 +68,17 @@ public abstract class AbstractTestHarness {
 
 	protected ObjectMapper objectMapper() {
 		var bean = new ObjectMapper();
-		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module())
-				.registerModule(new SimpleModule().addAbstractTypeMapping(State.class, StateNew.class));
 		bean.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module()).registerModule(
+				new SimpleModule().addDeserializer(State.class, new JsonDeserializer<State<Timesheet>>() {
+
+					@Override
+					public State<Timesheet> deserialize(JsonParser p, DeserializationContext ctxt)
+							throws IOException {
+						return TimesheetState.NEW;
+					}
+
+				}));
 		return bean;
 	}
 

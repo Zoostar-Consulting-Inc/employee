@@ -19,7 +19,8 @@ import com.zoostarinc.employee.service.impl.DefaultTimesheetWorkflowService;
 import com.zoostarinc.timesheet.model.Timesheet;
 
 import lombok.extern.slf4j.Slf4j;
-import net.zoostar.common.core.workflow.timesheet.state.AbstractTimesheetState;
+import net.zoostar.common.core.workflow.timesheet.action.TimesheetAction;
+import net.zoostar.common.core.workflow.timesheet.state.TimesheetState;
 
 @Slf4j
 class TimesheetRestControllerTest extends AbstractTestHarness {
@@ -42,10 +43,13 @@ class TimesheetRestControllerTest extends AbstractTestHarness {
 		log.info("Timesheet: {}", timesheet);
 
 		assertThat(timesheet.getEmployee()).isNotNull();
-		assertThat(AbstractTimesheetState.STATE_NEW).isEqualTo(timesheet.getState())
-				.hasSameHashCodeAs(timesheet.getState());
 		assertThat(timesheet.getHours()).isEqualTo(DefaultTimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
-
+		assertThat(TimesheetState.NEW).isEqualTo(timesheet.getState()).hasSameHashCodeAs(timesheet.getState());
+		var actions = timesheet.getState().getActions();
+		assertThat(actions).hasSize(1);
+		var save = actions.get("Save");
+		assertThat(save).isEqualTo(TimesheetAction.SAVE);
+		
 		var weekEnding = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 		assertThat(timesheet.getWeekEnding()).isEqualTo(weekEnding);
 	}
