@@ -4,19 +4,21 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
+import com.zoostarinc.employee.dao.entity.TimesheetState;
 import com.zoostarinc.employee.dao.repository.TimesheetRepository;
 import com.zoostarinc.employee.request.TimesheetRequest;
 import com.zoostarinc.employee.service.EmployeeService;
+import com.zoostarinc.employee.service.TimesheetService;
 import com.zoostarinc.employee.service.TimesheetWorkflowService;
 import com.zoostarinc.employee.transformer.impl.TimesheetTransformer;
-import com.zoostarinc.timesheet.model.Timesheet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.zoostar.common.core.workflow.timesheet.state.TimesheetState;
 
 @Getter
 @Service
@@ -29,9 +31,11 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 
 	private final TimesheetRepository timesheetRepository;
 
+	private final TimesheetService timesheetManager;
+
 	@Override
-	public Timesheet newTimesheet(String email) {
-		var timesheet = new Timesheet();
+	public TimesheetEntity newTimesheet(String email) {
+		var timesheet = new TimesheetEntity();
 		timesheet.setEmployee(employeeManager.retrieveByEmail(email));
 		timesheet.setState(TimesheetState.NEW);
 		timesheet.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
@@ -41,26 +45,37 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 
 	@Override
 	public TimesheetEntity process(String email, TimesheetRequest request) {
-		TimesheetEntity entity = null;
+		TimesheetEntity timesheetEntity = null;
 		var employee = employeeManager.retrieveByEmail(email);
-		var object = timesheetRepository.findByEmployeeAndWeekEnding(employee, request.getWeekEnding());
-		
-		if(object.isEmpty()) {
-			var timesheet = newTimesheet(email);
-			var state = timesheet.getState();
-			if(!state.toString().equals(request.getState())) {
-				throw new IllegalArgumentException("Timesheet state mismatch!");
-			}
-			
-			var action = state.getActions().get(request.getAction());
-			if(action == null) {
-				throw new IllegalArgumentException("No action found for given state!");
-			}
-			action.execute(timesheet);
-			entity = timesheetRepository.save(new TimesheetTransformer(timesheet).transform());
+
+		try {
+			timesheetEntity = timesheetManager.retrieveByEmployeeAndWeekEnding(employee, request.getWeekEnding());
+		} catch (EmptyResultDataAccessException e) {
+			timesheetEntity = save(email, request, employee);
 		}
-		
-		return entity;
+
+		return timesheetEntity;
+	}
+
+	protected TimesheetEntity save(String email, TimesheetRequest request, EmployeeEntity employee) {
+		var timesheet = newTimesheet(email);
+		var state = timesheet.getState();
+		if (!state.toString().equalsIgnoreCase(request.getState())) {
+			throw new IllegalArgumentException("Timesheet state mismatch!");
+		}
+
+		var action = state.getActions().get(request.getAction());
+		if (action == null) {
+			throw new IllegalArgumentException("No action found for given state!");
+		}
+
+		if (request.getHours() < DEFAULT_WEEKLY_HOURS) {
+			throw new IllegalArgumentException("Weekly hours may not be less than 40!");
+		}
+		timesheet.setHours(request.getHours());
+
+		action.execute(timesheet);
+		return timesheetManager.create(new TimesheetTransformer(timesheet));
 	}
 
 }

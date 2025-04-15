@@ -24,12 +24,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
+import com.zoostarinc.employee.dao.entity.TimesheetState;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
+import com.zoostarinc.employee.dao.repository.TimesheetRepository;
 import com.zoostarinc.employee.model.Employee;
-import com.zoostarinc.timesheet.model.Timesheet;
-
-import net.zoostar.common.core.workflow.State;
-import net.zoostar.common.core.workflow.timesheet.state.TimesheetState;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,6 +49,9 @@ public abstract class AbstractTestHarness {
 	@MockBean
 	protected EmployeeRepository employeeRepository;
 
+	@MockBean
+	protected TimesheetRepository timesheetRepository;
+
 	@Autowired
 	protected MockMvc endpoint;
 
@@ -70,10 +71,10 @@ public abstract class AbstractTestHarness {
 		var bean = new ObjectMapper();
 		bean.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module()).registerModule(
-				new SimpleModule().addDeserializer(State.class, new JsonDeserializer<State<Timesheet>>() {
+				new SimpleModule().addDeserializer(TimesheetState.class, new JsonDeserializer<TimesheetState>() {
 
 					@Override
-					public State<Timesheet> deserialize(JsonParser p, DeserializationContext ctxt)
+					public TimesheetState deserialize(JsonParser p, DeserializationContext ctxt)
 							throws IOException {
 						return TimesheetState.NEW;
 					}

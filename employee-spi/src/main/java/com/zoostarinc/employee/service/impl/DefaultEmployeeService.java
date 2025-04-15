@@ -3,6 +3,7 @@ package com.zoostarinc.employee.service.impl;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
@@ -10,7 +11,6 @@ import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
 import com.zoostarinc.employee.transformer.impl.EmployeeTransformer;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.common.core.Transformer;

@@ -1,26 +1,22 @@
 package com.zoostarinc.employee.transformer.impl;
 
-import java.util.UUID;
-
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
-import com.zoostarinc.timesheet.model.Timesheet;
+import com.zoostarinc.employee.service.impl.DefaultTimesheetWorkflowService;
 
 import lombok.AllArgsConstructor;
 import net.zoostar.common.core.Transformer;
 
 @AllArgsConstructor
 public class TimesheetTransformer implements Transformer<TimesheetEntity> {
-
-	private final Timesheet timesheet;
 	
+	private final TimesheetEntity timesheet;
+
 	@Override
 	public TimesheetEntity transform() {
-		var entity = new TimesheetEntity(UUID.randomUUID());
-		entity.setEmployee(timesheet.getEmployee());
-		entity.setHours(timesheet.getHours());
-		entity.setState(timesheet.getState());
-		entity.setWeekEnding(timesheet.getWeekEnding());
-		return entity;
+		if(timesheet.getHours() < DefaultTimesheetWorkflowService.DEFAULT_WEEKLY_HOURS) {
+			throw new IllegalArgumentException("Weekly hours may not be less than 40!");
+		}
+		return timesheet;
 	}
 
 }

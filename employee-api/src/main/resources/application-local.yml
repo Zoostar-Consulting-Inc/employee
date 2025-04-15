@@ -17,12 +17,12 @@ spring:
     open-in-view: false
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
   sql:
     init:
       mode: always
       platform: h2
-      schema-locations: classpath*:schema-h2.sql
+#      schema-locations: classpath*:schema-h2.sql
   security:
     oauth2:
       client:
