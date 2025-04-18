@@ -2,6 +2,7 @@ package com.zoostarinc.employee.service.impl;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -40,6 +41,7 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 		timesheet.setState(TimesheetState.NEW);
 		timesheet.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
 		timesheet.setHours(DEFAULT_WEEKLY_HOURS);
+		timesheet.setUpdateOn(LocalDateTime.now());
 		return timesheet;
 	}
 
@@ -50,14 +52,30 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 
 		try {
 			timesheetEntity = timesheetManager.retrieveByEmployeeAndWeekEnding(employee, request.getWeekEnding());
+			timesheetEntity = update(request, timesheetEntity);
 		} catch (EmptyResultDataAccessException e) {
-			timesheetEntity = save(email, request, employee);
+			timesheetEntity = create(email, request, employee);
 		}
 
 		return timesheetEntity;
 	}
 
-	protected TimesheetEntity save(String email, TimesheetRequest request, EmployeeEntity employee) {
+	protected TimesheetEntity update(TimesheetRequest request, TimesheetEntity timesheet) {
+		var state = timesheet.getState();
+		if (!state.toString().equalsIgnoreCase(request.getState())) {
+			throw new IllegalArgumentException("Timesheet state mismatch!");
+		}
+
+		var action = state.getActions().get(request.getAction());
+		if (action == null) {
+			throw new IllegalArgumentException("No action found for given state!");
+		}
+
+		action.execute(timesheet);
+		return timesheetManager.update(new TimesheetTransformer(timesheet));
+	}
+
+	protected TimesheetEntity create(String email, TimesheetRequest request, EmployeeEntity employee) {
 		var timesheet = newTimesheet(email);
 		var state = timesheet.getState();
 		if (!state.toString().equalsIgnoreCase(request.getState())) {
@@ -69,11 +87,8 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 			throw new IllegalArgumentException("No action found for given state!");
 		}
 
-		if (request.getHours() < DEFAULT_WEEKLY_HOURS) {
-			throw new IllegalArgumentException("Weekly hours may not be less than 40!");
-		}
 		timesheet.setHours(request.getHours());
-
+		timesheet.setUpdateOn(LocalDateTime.now());
 		action.execute(timesheet);
 		return timesheetManager.create(new TimesheetTransformer(timesheet));
 	}

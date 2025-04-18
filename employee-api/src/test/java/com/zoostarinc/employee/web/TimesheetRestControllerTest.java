@@ -145,4 +145,34 @@ class TimesheetRestControllerTest extends AbstractTestHarness {
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 	}
 
+	@Test
+	void testCreate200ProcessUpdateHours() throws Exception {
+		// given
+		var url = "/timesheet/process";
+		var request = new TimesheetRequest();
+		request.setAction(TimesheetAction.SAVE.toString());
+		request.setHours(DefaultTimesheetWorkflowService.DEFAULT_WEEKLY_HOURS + 10);
+		request.setState(TimesheetState.NEW.toString());
+		request.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
+
+		// mock
+		var timesheetEntity = new TimesheetEntity(UUID.randomUUID());
+		timesheetEntity.setEmployee(persistentEmployeeEntity);
+		timesheetEntity.setHours(request.getHours());
+		timesheetEntity.setState(TimesheetState.NEW);
+		timesheetEntity.setWeekEnding(request.getWeekEnding());
+		when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(persistentEmployeeEntity));
+		when(timesheetRepository.findByEmployeeAndWeekEnding(persistentEmployeeEntity, request.getWeekEnding()))
+				.thenReturn(Optional.of(timesheetEntity));
+		
+		// when
+		var response = endpoint
+				.perform(post(url).with(oidcLogin().oidcUser(testOidcUser(employee))).accept(APPLICATION_JSON_VALUE)
+						.contentType(APPLICATION_JSON_VALUE).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
+
+		// then
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+	}
+
 }

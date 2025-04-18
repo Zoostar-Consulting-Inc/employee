@@ -19,7 +19,10 @@ public enum TimesheetState implements State<TimesheetEntity> {
 			"Save", TimesheetAction.SAVE,
 			"Submit", TimesheetAction.SUBMIT)),
 	
-	CREATED("CREATED", Collections.emptyMap()),
+	CREATED("CREATED", Map.of(
+			"Save", TimesheetAction.SAVE,
+			"Submit", TimesheetAction.SUBMIT)),
+	
 	SUBMITTED("SUBMITTED", Collections.emptyMap());
 	
 	private final String name;

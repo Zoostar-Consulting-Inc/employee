@@ -1,6 +1,7 @@
 package com.zoostarinc.employee.dao.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -45,6 +46,9 @@ public class TimesheetEntity implements Workflowable<TimesheetEntity> {
 	@JoinColumn(name = "STATE")
 //	private State<TimesheetEntity> state;
 	private TimesheetState state;
+	
+	@Column(name = "UPDATED_ON")
+	private LocalDateTime updateOn;
 
 	public TimesheetEntity(UUID id) {
 		this.id = id;

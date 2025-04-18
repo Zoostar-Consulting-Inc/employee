@@ -35,4 +35,13 @@ public class DefaultTimesheetService implements TimesheetService {
 		return object.get();
 	}
 
+	@Override
+	@Transactional
+	public TimesheetEntity update(Transformer<TimesheetEntity> transformer) {
+		var timesheet = transformer.transform();
+		var entity = retrieveByEmployeeAndWeekEnding(timesheet.getEmployee(), timesheet.getWeekEnding());
+		entity.setHours(timesheet.getHours());
+		return timesheetRepository.save(entity);
+	}
+
 }

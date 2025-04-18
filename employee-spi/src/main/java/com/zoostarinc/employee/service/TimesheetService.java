@@ -12,5 +12,7 @@ public interface TimesheetService {
 	TimesheetEntity create(Transformer<TimesheetEntity> transformer);
 	
 	TimesheetEntity retrieveByEmployeeAndWeekEnding(EmployeeEntity employee, LocalDate weekEnding);
+
+	TimesheetEntity update(Transformer<TimesheetEntity> transformer);
 	
 }

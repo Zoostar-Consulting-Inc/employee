@@ -8,11 +8,11 @@ import lombok.Data;
 public class TimesheetRequest {
 
 	private String state;
-	
+
 	private String action;
-	
+
 	private LocalDate weekEnding;
-	
+
 	private Integer hours;
-	
+
 }
