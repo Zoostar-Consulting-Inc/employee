@@ -1,7 +1,7 @@
 package com.zoostarinc.employee.dao.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -44,11 +44,10 @@ public class TimesheetEntity implements Workflowable<TimesheetEntity> {
 
 	@Enumerated(EnumType.STRING)
 	@JoinColumn(name = "STATE")
-//	private State<TimesheetEntity> state;
 	private TimesheetState state;
 	
 	@Column(name = "UPDATED_ON")
-	private LocalDateTime updateOn;
+	private OffsetDateTime updateOn;
 
 	public TimesheetEntity(UUID id) {
 		this.id = id;

@@ -2,13 +2,12 @@ package com.zoostarinc.employee.service.impl;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
 import com.zoostarinc.employee.dao.entity.TimesheetState;
 import com.zoostarinc.employee.dao.repository.TimesheetRepository;
@@ -41,7 +40,7 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 		timesheet.setState(TimesheetState.NEW);
 		timesheet.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
 		timesheet.setHours(DEFAULT_WEEKLY_HOURS);
-		timesheet.setUpdateOn(LocalDateTime.now());
+		timesheet.setUpdateOn(OffsetDateTime.now());
 		return timesheet;
 	}
 
@@ -54,10 +53,26 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 			timesheetEntity = timesheetManager.retrieveByEmployeeAndWeekEnding(employee, request.getWeekEnding());
 			timesheetEntity = update(request, timesheetEntity);
 		} catch (EmptyResultDataAccessException e) {
-			timesheetEntity = create(email, request, employee);
+			timesheetEntity = create(request, email);
 		}
 
 		return timesheetEntity;
+	}
+
+	protected TimesheetEntity create(TimesheetRequest request, String email) {
+		var timesheet = newTimesheet(email);
+		var state = timesheet.getState();
+		if (!state.toString().equalsIgnoreCase(request.getState())) {
+			throw new IllegalArgumentException("Timesheet state mismatch!");
+		}
+
+		var action = state.getActions().get(request.getAction());
+		if (action == null) {
+			throw new IllegalArgumentException("No action found for given state!");
+		}
+
+		action.execute(timesheet);
+		return timesheetManager.create(new TimesheetTransformer(request, timesheet));
 	}
 
 	protected TimesheetEntity update(TimesheetRequest request, TimesheetEntity timesheet) {
@@ -72,25 +87,7 @@ public class DefaultTimesheetWorkflowService implements TimesheetWorkflowService
 		}
 
 		action.execute(timesheet);
-		return timesheetManager.update(new TimesheetTransformer(timesheet));
-	}
-
-	protected TimesheetEntity create(String email, TimesheetRequest request, EmployeeEntity employee) {
-		var timesheet = newTimesheet(email);
-		var state = timesheet.getState();
-		if (!state.toString().equalsIgnoreCase(request.getState())) {
-			throw new IllegalArgumentException("Timesheet state mismatch!");
-		}
-
-		var action = state.getActions().get(request.getAction());
-		if (action == null) {
-			throw new IllegalArgumentException("No action found for given state!");
-		}
-
-		timesheet.setHours(request.getHours());
-		timesheet.setUpdateOn(LocalDateTime.now());
-		action.execute(timesheet);
-		return timesheetManager.create(new TimesheetTransformer(timesheet));
+		return timesheetManager.update(new TimesheetTransformer(request, timesheet));
 	}
 
 }
