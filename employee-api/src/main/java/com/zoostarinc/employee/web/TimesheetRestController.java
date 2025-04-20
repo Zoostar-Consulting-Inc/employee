@@ -34,10 +34,11 @@ public class TimesheetRestController {
 	}
 
 	@PostMapping(path = "/process", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<TimesheetEntity> postForProcessing(@AuthenticationPrincipal OidcUser user, @RequestBody TimesheetRequest request) {
-		return ResponseEntity.ok(new TimesheetResponseTransformer(
-				timesheetWorkflowManager.process(user.getEmail(), request))
-				.transform());
+	public ResponseEntity<TimesheetEntity> postForProcessing(@AuthenticationPrincipal OidcUser user,
+			@RequestBody TimesheetRequest request) {
+		return ResponseEntity
+				.ok(new TimesheetResponseTransformer(timesheetWorkflowManager.process(user.getEmail(), request))
+						.transform());
 	}
 
 }

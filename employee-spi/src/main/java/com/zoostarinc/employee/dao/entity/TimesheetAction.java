@@ -1,5 +1,7 @@
 package com.zoostarinc.employee.dao.entity;
 
+import com.zoostarinc.employee.utils.Messages;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.zoostar.common.core.workflow.Action;
@@ -8,7 +10,7 @@ import net.zoostar.common.core.workflow.Action;
 @AllArgsConstructor
 public enum TimesheetAction implements Action<TimesheetEntity> {
 
-	SAVE("Save") {
+	SAVE(Messages.getString("TimesheetAction.SAVE")) { //$NON-NLS-1$
 
 		@Override
 		public void execute(TimesheetEntity timesheet) {
@@ -17,7 +19,7 @@ public enum TimesheetAction implements Action<TimesheetEntity> {
 
 	},
 
-	SUBMIT("Submit") {
+	SUBMIT(Messages.getString("TimesheetAction.SUBMIT")) { //$NON-NLS-1$
 
 		@Override
 		public void execute(TimesheetEntity timesheet) {

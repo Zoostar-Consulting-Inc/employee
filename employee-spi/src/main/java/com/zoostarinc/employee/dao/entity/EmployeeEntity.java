@@ -1,5 +1,6 @@
 package com.zoostarinc.employee.dao.entity;
 
+import java.util.Objects;
 import java.util.UUID;
 
 import com.zoostarinc.employee.model.Employee;
@@ -49,6 +50,23 @@ public class EmployeeEntity extends Employee {
 	@Column(name = "LAST_NAME", length = 50)
 	public String getLastName() {
 		return super.getLastName();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getEmail());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof EmployeeEntity)) {
+			return false;
+		}
+		EmployeeEntity other = (EmployeeEntity) obj;
+		return Objects.equals(getEmail(), other.getEmail());
 	}
 
 }
