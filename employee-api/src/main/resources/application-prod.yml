@@ -1,18 +1,14 @@
-# --- Application specific properties ---
-logging:
-  level:
-    root: info
-
+# --- Application specific properties per environment ---
 logs:
   base:
     dir: logs
-    
+
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    password: ${metadata.datasource.password}
-    url: jdbc:h2:mem:employee-db
-    username: ${user.name}
+    password: ${employee.datasource.password}
+    url: jdbc:h2:./data/employee
+    username: spring-boot-local
   jpa:
     defer-datasource-initialization: true
     open-in-view: false

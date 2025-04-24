@@ -9,8 +9,6 @@ public interface EmployeeService {
 
 	EmployeeEntity create(Transformer<Employee> transformer);
 
-	EmployeeEntity retrieveByUsername(String username);
-
-	EmployeeEntity update(Transformer<Employee> transformer);
+	EmployeeEntity retrieveByEmail(String email);
 
 }

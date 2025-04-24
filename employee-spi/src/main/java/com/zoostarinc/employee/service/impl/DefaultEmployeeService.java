@@ -1,16 +1,16 @@
 package com.zoostarinc.employee.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
-import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
+import com.zoostarinc.employee.transformer.impl.EmployeeTransformer;
 
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.common.core.Transformer;
@@ -18,7 +18,7 @@ import net.zoostar.common.core.Transformer;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class EmployeeServiceImpl implements EmployeeService {
+public class DefaultEmployeeService implements EmployeeService {
 
 	public static final String REQUIRED_FIELD_MISSING_ERROR_MSG = "Required field [username] is missing in request!";
 
@@ -28,8 +28,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Transactional
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		var value = employeeRepository.findByUsername(employee.getUsername());
-		if (value.isPresent()) {
+		var object = employeeRepository.findByEmail(employee.getEmail());
+		if (object.isPresent()) {
 			throw new DuplicateKeyException("Employee exists with given username!");
 		}
 
@@ -38,25 +38,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeEntity retrieveByUsername(String username) {
-		if (!StringUtils.hasText(username)) {
-			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
+	public EmployeeEntity retrieveByEmail(String email) {
+		var object = employeeRepository.findByEmail(email);
+		if(object.isEmpty()) {
+			throw new EmptyResultDataAccessException("No Employee found!", 1);
 		}
-
-		return employeeRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalArgumentException("No employee found by given username!"));
-	}
-
-	@Override
-	@Transactional
-	public EmployeeEntity update(Transformer<Employee> transformer) {
-		var employee = transformer.transform();
-		var entity = retrieveByUsername(employee.getUsername());
-		log.info("Updating existing employee: {}", entity);
-		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
-		return entity;
+		return object.get();
 	}
 
 }
