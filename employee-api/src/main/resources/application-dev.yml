@@ -1,0 +1,31 @@
+# --- Application specific properties per environment ---
+logs:
+  base:
+    dir: logs
+
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    password: ${employee.datasource.password}
+    url: jdbc:h2:./data/employee
+    username: spring-boot-local
+  jpa:
+    defer-datasource-initialization: true
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+      platform: h2
+      schema-locations: classpath*:schema-h2.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 547141362195-p1jmnki19qbp67nfvblbl3b7gk2oj4fl.apps.googleusercontent.com
+            clientSecret: ${employee.google.secret}
+            scope: openid,profile,email
+# --- xxx ---
