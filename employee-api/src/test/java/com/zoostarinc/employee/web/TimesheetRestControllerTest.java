@@ -7,18 +7,25 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAdjusters;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.zoostarinc.employee.config.AbstractTestHarness;
-import com.zoostarinc.employee.dao.entity.TimesheetAction;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
-import com.zoostarinc.employee.dao.entity.TimesheetState;
-import com.zoostarinc.employee.service.impl.DefaultTimesheetWorkflowService;
+import com.zoostarinc.employee.service.TimesheetState;
+import com.zoostarinc.employee.service.impl.TimesheetStateDraft;
+import com.zoostarinc.employee.service.impl.TimesheetWorkflowService;
+import com.zoostarinc.employee.web.response.TimesheetResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,12 +33,15 @@ import lombok.extern.slf4j.Slf4j;
 class TimesheetRestControllerTest extends AbstractTestHarness {
 
 	@Test
-	void testCreate200() throws Exception {
+	void getDrafts200() throws Exception {
+
 		// given
-		String url = "/timesheet/process";
+		String url = "/timesheet";
 
 		// mock
 		when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(persistentEmployeeEntity));
+		when(timesheetRepository.findByEmployeeAndState(persistentEmployeeEntity, TimesheetStateDraft.NAME))
+				.thenReturn(Collections.emptyList());
 
 		// when
 		var response = endpoint.perform(get(url).with(oidcLogin().oidcUser(testOidcUser(employee)))
@@ -39,29 +49,60 @@ class TimesheetRestControllerTest extends AbstractTestHarness {
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-		var timesheet = om.readValue(response.getContentAsString(), TimesheetEntity.class);
-		log.info("Timesheet: {}", timesheet);
+		var results = om.readValue(response.getContentAsString(), new TypeReference<Collection<TimesheetResponse>>() {
+		});
+		assertThat(results).hasAtLeastOneElementOfType(TimesheetResponse.class);
 
-		var employee = timesheet.getEmployee();
-		assertThat(employee).isNotNull().isEqualTo(persistentEmployeeEntity)
-				.hasSameHashCodeAs(persistableEmployeeEntity);
-		var duplicate = employee;
-		assertThat(duplicate).isEqualTo(employee);
-		assertThat(timesheet.getHours()).isEqualTo(DefaultTimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
-		assertThat(TimesheetState.NEW).isEqualTo(timesheet.getState()).hasSameHashCodeAs(timesheet.getState());
+		TimesheetResponse timesheetResponse = null;
+		for (var result : results) {
+			timesheetResponse = result;
+		}
+		assertThat(timesheetResponse.getEmployee()).isNotNull();
+		assertThat(timesheetResponse.getState().getName()).isEqualTo(TimesheetState.DRAFT.name());
+		assertThat(timesheetResponse.getWeekHours()).isEqualTo(TimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
+		assertThat(OffsetDateTime.parse(timesheetResponse.getUpdatedAt())).isBeforeOrEqualTo(OffsetDateTime.now());
+	}
 
-		var actions = timesheet.getState().getActions();
-		assertThat(actions).hasSize(2);
-		var action = actions.get(TimesheetAction.SAVE.toString());
-		assertThat(action).isEqualTo(TimesheetAction.SAVE);
-		action.execute(timesheet);
-		assertThat(timesheet.getState()).isEqualTo(TimesheetState.CREATED);
+	@Test
+	void getDraftsWithMock200() throws Exception {
 
-		action = actions.get(TimesheetAction.SUBMIT.toString());
-		assertThat(action).isEqualTo(TimesheetAction.SUBMIT);
+		// given
+		String url = "/timesheet";
 
-		var weekEnding = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
-		assertThat(timesheet.getWeekEnding()).isEqualTo(weekEnding);
+		// mock
+		when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(persistentEmployeeEntity));
+		when(timesheetRepository.findByEmployeeAndState(persistentEmployeeEntity, TimesheetStateDraft.NAME))
+				.thenReturn(List.of(timesheetEntity(UUID.randomUUID())));
+
+		// when
+		var response = endpoint.perform(get(url).with(oidcLogin().oidcUser(testOidcUser(employee)))
+				.contentType(MediaType.APPLICATION_JSON_VALUE)).andReturn().getResponse();
+
+		// then
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		var results = om.readValue(response.getContentAsString(), new TypeReference<Collection<TimesheetResponse>>() {
+		});
+		assertThat(results).hasAtLeastOneElementOfType(TimesheetResponse.class);
+
+		TimesheetResponse timesheetResponse = null;
+		for (var result : results) {
+			timesheetResponse = result;
+		}
+		assertThat(timesheetResponse.getEmployee()).isNotNull();
+		assertThat(timesheetResponse.getState().getName()).isEqualTo(TimesheetState.DRAFT.name());
+		assertThat(timesheetResponse.getWeekHours()).isEqualTo(TimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
+		assertThat(OffsetDateTime.parse(timesheetResponse.getUpdatedAt())).isBeforeOrEqualTo(OffsetDateTime.now());
+	}
+
+	protected TimesheetEntity timesheetEntity(UUID id) {
+		var entity = new TimesheetEntity(id);
+		entity.setEmployee(persistentEmployeeEntity);
+		entity.setHours(TimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
+		entity.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
+		entity.setState(TimesheetState.DRAFT.name());
+		entity.setUpdatedAt(OffsetDateTime.now());
+		entity.setId(UUID.randomUUID());
+		return entity;
 	}
 
 }

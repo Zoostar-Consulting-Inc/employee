@@ -1,7 +1,11 @@
 package com.zoostarinc.employee.web;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import java.util.Collection;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -9,36 +13,49 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
 import com.zoostarinc.employee.service.EmployeeService;
-import com.zoostarinc.employee.transformer.impl.EmployeeTimesheetTransformer;
+import com.zoostarinc.employee.service.TimesheetService;
+import com.zoostarinc.employee.service.TimesheetState;
+import com.zoostarinc.employee.service.impl.AbstractTimesheetState;
+import com.zoostarinc.employee.web.response.TimesheetResponse;
+import com.zoostarinc.employee.web.transform.impl.TimesheetEntitiesTransformer;
+import com.zoostarinc.timesheet.model.Timesheet;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import net.zoostar.common.aop.Timeable;
 import net.zoostar.common.core.workflow.WorkflowService;
 
 @Getter
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/timesheet")
-public class TimesheetRestController {
+public class TimesheetRestController implements ApplicationContextAware {
+
+	private final ObjectMapper om;
 
 	private final EmployeeService employeeManager;
 
-	private final WorkflowService<TimesheetEntity> timesheetWorkflowManager;
+	private final WorkflowService<Timesheet> timesheetWorkflowManager;
 
-	@GetMapping(path = "/process", produces = APPLICATION_JSON_VALUE)
-	public ResponseEntity<TimesheetEntity> get(@AuthenticationPrincipal OidcUser user) {
-		return ResponseEntity.ok(timesheetWorkflowManager
-				.process(new EmployeeTimesheetTransformer(employeeManager.retrieveByEmail(user.getEmail()))));
+	private final TimesheetService<TimesheetEntity> timesheetManager;
+
+	private ApplicationContext applicationContext;
+
+	@Timeable
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Collection<TimesheetResponse>> getDrafts(@AuthenticationPrincipal OidcUser user) {
+		return ResponseEntity.ok(new TimesheetEntitiesTransformer(employeeManager.retrieveByEmail(user.getEmail()),
+				timesheetManager.retrieveByEmployeeAndState(employeeManager.retrieveByEmail(user.getEmail()),
+						TimesheetState.DRAFT.name()),
+				applicationContext, AbstractTimesheetState.class).transform());
 	}
 
-//	@PostMapping(path = "/process", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	public ResponseEntity<TimesheetEntity> post(@AuthenticationPrincipal OidcUser user,
-//			@RequestBody TimesheetRequest request) {
-//		return ResponseEntity
-//				.ok(new TimesheetResponseTransformer(timesheetWorkflowManager.process(user.getEmail(), request))
-//						.transform());
-//	}
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 }

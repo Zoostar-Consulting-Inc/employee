@@ -6,8 +6,6 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.zoostar.common.core.workflow.Workflowable;
 
 @Getter
 @Setter
@@ -26,7 +23,7 @@ import net.zoostar.common.core.workflow.Workflowable;
 @ToString
 @NoArgsConstructor
 @Table(name = "TIMESHEET")
-public class TimesheetEntity implements Workflowable<TimesheetEntity> {
+public class TimesheetEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
@@ -42,12 +39,12 @@ public class TimesheetEntity implements Workflowable<TimesheetEntity> {
 	@Column(name = "WEEK_ENDING")
 	private LocalDate weekEnding;
 
-	@Enumerated(EnumType.STRING)
+//	@Enumerated(EnumType.STRING)
 	@JoinColumn(name = "STATE")
-	private TimesheetState state;
+	private String state;
 	
-	@Column(name = "UPDATED_ON")
-	private OffsetDateTime updateOn;
+	@Column(name = "UPDATED_AT")
+	private OffsetDateTime updatedAt;
 
 	public TimesheetEntity(UUID id) {
 		this.id = id;

@@ -1,5 +1,6 @@
 package com.zoostarinc.employee.service.impl;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,9 @@ public class DefaultEmployeeService implements EmployeeService {
 	}
 
 	@Override
+	@Cacheable("employeeByEmail")
 	public EmployeeEntity retrieveByEmail(String email) {
+		log.info("Retrieve employee by email: {}...", email);
 		var object = employeeRepository.findByEmail(email);
 		if(object.isEmpty()) {
 			throw new EmptyResultDataAccessException("No Employee found!", 1);

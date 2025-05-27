@@ -1,6 +1,7 @@
 package com.zoostarinc.employee.dao.repository;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -12,5 +13,7 @@ import com.zoostarinc.employee.dao.entity.TimesheetEntity;
 public interface TimesheetRepository extends CrudRepository<TimesheetEntity, UUID> {
 
 	Optional<TimesheetEntity> findByEmployeeAndWeekEnding(EmployeeEntity employee, LocalDate weekEnding);
+	
+	Collection<TimesheetEntity> findByEmployeeAndState(EmployeeEntity employee, String state);
 
 }

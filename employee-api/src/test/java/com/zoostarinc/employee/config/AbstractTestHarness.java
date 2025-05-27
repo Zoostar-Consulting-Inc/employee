@@ -1,6 +1,5 @@
 package com.zoostarinc.employee.config;
 
-import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +14,12 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
-import com.zoostarinc.employee.dao.entity.TimesheetState;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.dao.repository.TimesheetRepository;
 import com.zoostarinc.employee.model.Employee;
@@ -70,16 +65,20 @@ public abstract class AbstractTestHarness {
 	protected ObjectMapper objectMapper() {
 		var bean = new ObjectMapper();
 		bean.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module()).registerModule(
-				new SimpleModule().addDeserializer(TimesheetState.class, new JsonDeserializer<TimesheetState>() {
-
-					@Override
-					public TimesheetState deserialize(JsonParser p, DeserializationContext ctxt)
-							throws IOException {
-						return TimesheetState.NEW;
-					}
-
-				}));
+		bean.registerModule(new JavaTimeModule());
+		bean.registerModule(new Jdk8Module());
+		SimpleModule module = new SimpleModule();
+		bean.registerModule(module);
+//		bean.registerModule(new JavaTimeModule()).registerModule(new Jdk8Module()).registerModule(
+//				new SimpleModule().addDeserializer(TimesheetState.class, new JsonDeserializer<TimesheetState>() {
+//
+//					@Override
+//					public TimesheetState deserialize(JsonParser p, DeserializationContext ctxt)
+//							throws IOException {
+//						return TimesheetState.DRAFT;
+//					}
+//
+//				}));
 		return bean;
 	}
 
