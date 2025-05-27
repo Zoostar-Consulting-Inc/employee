@@ -3,8 +3,6 @@ package com.zoostarinc.employee.dao.entity;
 import java.util.Objects;
 import java.util.UUID;
 
-import org.springframework.data.domain.Persistable;
-
 import com.zoostarinc.employee.model.Employee;
 
 import jakarta.persistence.Column;
@@ -13,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,7 +20,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Table(name = "EMPLOYEE")
 @ToString(callSuper = true)
-public class EmployeeEntity extends Employee implements Persistable<UUID> {
+public class EmployeeEntity extends Employee {
 
 	private UUID id;
 
@@ -38,36 +35,26 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	}
 
 	@Override
+	@Column(name = "EMAIL", length = 50)
 	public String getEmail() {
 		return super.getEmail();
 	}
 
 	@Override
-	@Column(name = "FIRST_NAME")
+	@Column(name = "FIRST_NAME", length = 50)
 	public String getFirstName() {
 		return super.getFirstName();
 	}
 
 	@Override
-	@Column(name = "LAST_NAME")
+	@Column(name = "LAST_NAME", length = 50)
 	public String getLastName() {
 		return super.getLastName();
 	}
 
 	@Override
-	public String getUsername() {
-		return super.getUsername();
-	}
-	
-	@Override
-	@Transient
-	public boolean isNew() {
-		return id == null;
-	}
-
-	@Override
 	public int hashCode() {
-		return Objects.hash(getUsername());
+		return Objects.hash(getEmail());
 	}
 
 	@Override
@@ -79,7 +66,7 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 			return false;
 		}
 		EmployeeEntity other = (EmployeeEntity) obj;
-		return Objects.equals(getUsername(), other.getUsername());
+		return Objects.equals(getEmail(), other.getEmail());
 	}
 
 }
