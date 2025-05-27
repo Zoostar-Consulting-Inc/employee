@@ -100,39 +100,39 @@
 							<goal>prepare-agent</goal>
 						</goals>
 						<configuration>
-							<destFile>../target/jacoco/jacoco.exec</destFile>
+<!--							<destFile>../target/jacoco/jacoco.exec</destFile>-->
 							<append>true</append>
 						</configuration>
 					</execution>
-					<execution>
-						<id>jacoco-report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>../target/jacoco</outputDirectory>
-							<dataFile>../target/jacoco/jacoco.exec</dataFile>
-						</configuration>
-					</execution>
+<!--					<execution>-->
+<!--						<id>jacoco-report</id>-->
+<!--						<phase>test</phase>-->
+<!--						<goals>-->
+<!--							<goal>report</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<outputDirectory>../target/jacoco</outputDirectory>-->
+<!--							<dataFile>../target/jacoco/jacoco.exec</dataFile>-->
+<!--						</configuration>-->
+<!--					</execution>-->
 					<execution>
 						<id>jacoco-aggregate</id>
-						<phase>test</phase>
+<!--						<phase>test</phase>-->
 						<goals>
 							<goal>report-aggregate</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>../target/jacoco-aggregate</outputDirectory>
+<!--							<outputDirectory>../target/jacoco-aggregate</outputDirectory>-->
 						</configuration>
 					</execution>
 					<execution>
 						<id>jacoco-check</id>
+<!--						<phase>test</phase>-->
 						<goals>
 							<goal>check</goal>
 						</goals>
-						<phase>test</phase>
 						<configuration>
-							<dataFile>../target/jacoco/jacoco.exec</dataFile>
+<!--							<dataFile>../target/jacoco/jacoco.exec</dataFile>-->
 							<rules>
 								<rule>
 									<element>PACKAGE</element>
