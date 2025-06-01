@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.zoostarinc.employee.config.AbstractTestHarness;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
+import com.zoostarinc.employee.request.TimesheetRequest;
 import com.zoostarinc.employee.service.TimesheetState;
 import com.zoostarinc.employee.service.impl.TimesheetStateDraft;
 import com.zoostarinc.employee.service.impl.TimesheetWorkflowService;
@@ -92,6 +94,35 @@ class TimesheetRestControllerTest extends AbstractTestHarness {
 		assertThat(timesheetResponse.getState().getName()).isEqualTo(TimesheetState.DRAFT.name());
 		assertThat(timesheetResponse.getWeekHours()).isEqualTo(TimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
 		assertThat(OffsetDateTime.parse(timesheetResponse.getUpdatedAt())).isBeforeOrEqualTo(OffsetDateTime.now());
+	}
+
+	@Test
+	void postTimesheetSave200() throws Exception {
+		// given
+		String url = "/timesheet";
+		var request = new TimesheetRequest();
+		request.setAction("save");
+		request.setHours(40);
+		request.setState("draft");
+		request.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)));
+
+		// mock
+		when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(persistentEmployeeEntity));
+		when(timesheetRepository.findByEmployeeAndStateAndWeekEnding(persistentEmployeeEntity,
+				request.getState().toUpperCase(), request.getWeekEnding()))
+				.thenReturn(Optional.of(timesheetEntity(UUID.randomUUID())));
+
+		// when
+		var response = endpoint
+				.perform(post(url).accept(MediaType.APPLICATION_JSON_VALUE)
+						.with(oidcLogin().oidcUser(testOidcUser(employee)))
+						.contentType(MediaType.APPLICATION_JSON_VALUE).content(om.writeValueAsString(request)))
+				.andReturn().getResponse();
+
+		// then
+		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+		var timesheet = om.readValue(response.getContentAsString(), TimesheetResponse.class);
+		assertThat(timesheet).isNotNull();
 	}
 
 	protected TimesheetEntity timesheetEntity(UUID id) {

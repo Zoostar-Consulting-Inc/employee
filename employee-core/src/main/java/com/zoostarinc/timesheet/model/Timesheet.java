@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 
 import com.zoostarinc.employee.model.Employee;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,6 +14,7 @@ import net.zoostar.common.core.workflow.Workflowable;
 
 @Getter
 @Setter
+@Builder
 @ToString
 public class Timesheet implements Workflowable {
 	

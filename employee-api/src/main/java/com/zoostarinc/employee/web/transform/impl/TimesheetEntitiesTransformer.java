@@ -7,19 +7,18 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.context.ApplicationContext;
-
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.entity.TimesheetEntity;
-import com.zoostarinc.employee.service.impl.AbstractTimesheetState;
 import com.zoostarinc.employee.service.impl.TimesheetWorkflowService;
 import com.zoostarinc.employee.web.response.TimesheetResponse;
+import com.zoostarinc.timesheet.model.Timesheet;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.common.core.Transformer;
+import net.zoostar.common.core.workflow.WorkflowService;
 
 @Slf4j
 @Getter
@@ -30,15 +29,13 @@ public class TimesheetEntitiesTransformer implements Transformer<Collection<Time
 	
 	private final Collection<TimesheetEntity> entities;
 	
-	private final ApplicationContext applicationContext;
-
-	private final Class<AbstractTimesheetState> clazz;
+	private final WorkflowService<Timesheet> timesheetManager;
 
 	@Override
 	public Collection<TimesheetResponse> transform() {
 		Collection<TimesheetResponse> response = new ArrayList<>();
 		for(var entity : entities) {
-			response.add(new TimesheetEntityTransformer(entity, applicationContext, clazz).transform());
+			response.add(new TimesheetEntityTransformer(entity, timesheetManager).transform());
 		}
 		
 		if(CollectionUtils.isEmpty(response)) {
@@ -54,7 +51,7 @@ public class TimesheetEntitiesTransformer implements Transformer<Collection<Time
 		response.setEmployee(employeeEntity);
 		response.setWeekEnding(LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY)).toString());
 		response.setWeekHours(TimesheetWorkflowService.DEFAULT_WEEKLY_HOURS);
-		response.setState(new StateResponseTransformer("DRAFT", applicationContext, clazz).transform());
+		response.setState(new StateResponseTransformer("DRAFT", timesheetManager).transform());
 		response.setUpdatedAt(OffsetDateTime.now().toString());
 		log.info("Created new timesheet: {}", response);
 		return response;
