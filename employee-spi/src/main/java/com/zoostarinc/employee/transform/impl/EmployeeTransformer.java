@@ -23,7 +23,6 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 		entity.setEmail(employee.getEmail());
 		entity.setFirstName(employee.getFirstName());
 		entity.setLastName(employee.getLastName());
-		entity.setUsername(employee.getUsername());
 		log.info("Employee Entity: {}", entity);
 		return entity;
 	}

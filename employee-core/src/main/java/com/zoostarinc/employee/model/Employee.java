@@ -36,4 +36,9 @@ public class Employee implements Hierarchical<Employee> {
 		}
 	}
 
+	@Override
+	public boolean isDescendantOf(Employee parent) {
+		return this.getParent().equals(parent);
+	}
+
 }
