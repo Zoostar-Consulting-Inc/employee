@@ -18,7 +18,7 @@ public class EmployeeRequestTransformer implements Transformer<Employee> {
 	
 	@Override
 	public Employee transform() {
-		if(!StringUtils.hasText(request.getUsername())) {
+		if(!StringUtils.hasText(request.getEmail())) {
 			throw new IllegalArgumentException(EmployeeServiceImpl.REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 		return request;

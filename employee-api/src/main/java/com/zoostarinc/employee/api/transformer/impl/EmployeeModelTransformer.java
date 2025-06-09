@@ -21,7 +21,6 @@ public class EmployeeModelTransformer implements Transformer<EmployeeResponse> {
 		response.setEmail(employee.getEmail());
 		response.setFirstName(employee.getFirstName());
 		response.setLastName(employee.getLastName());
-		response.setUsername(employee.getUsername());
 		log.info("Employee Response: {}", response);
 		return response;
 	}

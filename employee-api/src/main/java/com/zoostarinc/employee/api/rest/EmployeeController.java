@@ -23,8 +23,8 @@ import com.zoostarinc.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import net.zoostar.common.aop.Timeable;
 import net.zoostar.common.core.Transformer;
+import net.zoostar.common.core.timeable.Timeable;
 import net.zoostar.common.web.response.SuccessfulRequestLoggerResponseEntity;
 
 @Timeable
@@ -48,10 +48,10 @@ public class EmployeeController {
 				request, om, HttpStatus.CREATED);
 	}
 
-	@GetMapping(path = "/retrieveByUsername", produces = APPLICATION_JSON_VALUE)
-	public ResponseEntity<EmployeeResponse> getEmployeeByUsername(@RequestParam String username) {
+	@GetMapping(path = "/retrieveByEmail", produces = APPLICATION_JSON_VALUE)
+	public ResponseEntity<EmployeeResponse> getEmployeeByUsername(@RequestParam String email) {
 		return new ResponseEntity<>(
-				new EmployeeModelTransformer(employeeManager.retrieveByUsername(username)).transform(), HttpStatus.OK);
+				new EmployeeModelTransformer(employeeManager.retrieveByEmail(email)).transform(), HttpStatus.OK);
 	}
 
 	@PutMapping(path = "/update", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)

@@ -47,7 +47,6 @@ class EmployeeControllerTest {
 		entity.setEmail("devops@zoostar.net");
 		entity.setFirstName("Dev");
 		entity.setLastName("Ops");
-		entity.setUsername("zoostar");
 	}
 
 	@Test
@@ -58,10 +57,9 @@ class EmployeeControllerTest {
 		request.setEmail(entity.getEmail());
 		request.setFirstName(entity.getFirstName());
 		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
 
 		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.empty());
+		when(employeeRepository.findByEmail(request.getEmail())).thenReturn(Optional.empty());
 		when(employeeRepository.save(entity)).thenReturn(entity);
 
 		// when
@@ -97,10 +95,9 @@ class EmployeeControllerTest {
 		request.setEmail(entity.getEmail());
 		request.setFirstName(entity.getFirstName());
 		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
 
 		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(entity));
+		when(employeeRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
 
 		// when
 		var response = api.perform(post(url).contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
@@ -113,11 +110,11 @@ class EmployeeControllerTest {
 	@Test
 	void testGetEmployee200() throws Exception {
 		// given
-		StringBuilder url = new StringBuilder("/api/retrieveByUsername?username=");
-		url.append(entity.getUsername());
+		StringBuilder url = new StringBuilder("/api/retrieveByEmail?email=");
+		url.append(entity.getEmail());
 
 		// mock
-		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.of(entity));
+		when(employeeRepository.findByEmail(entity.getEmail())).thenReturn(Optional.of(entity));
 
 		// when
 		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
@@ -135,7 +132,7 @@ class EmployeeControllerTest {
 		url.append("");
 
 		// mock
-		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.of(entity));
+		when(employeeRepository.findByEmail(entity.getEmail())).thenReturn(Optional.of(entity));
 
 		// when
 		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
@@ -151,7 +148,7 @@ class EmployeeControllerTest {
 		url.append("zoostar");
 
 		// mock
-		when(employeeRepository.findByUsername(entity.getUsername())).thenReturn(Optional.empty());
+		when(employeeRepository.findByEmail(entity.getEmail())).thenReturn(Optional.empty());
 
 		// when
 		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
@@ -168,10 +165,9 @@ class EmployeeControllerTest {
 		request.setEmail(entity.getEmail());
 		request.setFirstName(entity.getFirstName());
 		request.setLastName(entity.getLastName());
-		request.setUsername(entity.getUsername());
 
 		// mock
-		when(employeeRepository.findByUsername(request.getUsername())).thenReturn(Optional.of(entity));
+		when(employeeRepository.findByEmail(request.getEmail())).thenReturn(Optional.of(entity));
 		when(employeeRepository.save(entity)).thenReturn(entity);
 
 		// when
