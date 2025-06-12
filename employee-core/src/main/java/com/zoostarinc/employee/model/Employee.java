@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import net.zoostar.common.core.Hierarchical;
+import net.zoostar.common.hierarchy.Hierarchical;
 
 @Getter
 @Setter

@@ -8,7 +8,7 @@ import com.zoostarinc.employee.service.impl.EmployeeServiceImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @ToString
 @AllArgsConstructor

@@ -23,8 +23,8 @@ import com.zoostarinc.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import net.zoostar.common.core.Transformer;
-import net.zoostar.common.core.timeable.Timeable;
+import net.zoostar.common.audit.Timeable;
+import net.zoostar.common.transform.Transformer;
 import net.zoostar.common.web.response.SuccessfulRequestLoggerResponseEntity;
 
 @Timeable

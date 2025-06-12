@@ -6,7 +6,7 @@ import com.zoostarinc.employee.model.Employee;
 import lombok.AllArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @Slf4j
 @ToString

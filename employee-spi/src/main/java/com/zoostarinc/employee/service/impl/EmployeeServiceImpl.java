@@ -14,7 +14,7 @@ import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @Slf4j
 @Service
