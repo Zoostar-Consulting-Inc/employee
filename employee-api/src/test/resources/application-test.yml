@@ -19,7 +19,7 @@ logs:
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    password: S3cret$
+    password: ${datasource.password}
     url: jdbc:h2:mem:employee-db-test
     username: junit
   jpa:
