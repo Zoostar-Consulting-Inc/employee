@@ -117,7 +117,7 @@ class EmployeeControllerTest {
 		when(employeeRepository.findByEmail(entity.getEmail())).thenReturn(Optional.of(entity));
 
 		// when
-		var response = api.perform(get(url.toString()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
+		var response = api.perform(get(url.toString()).with(SecurityMockMvcRequestPostProcessors.oidcLogin()).accept(MediaType.APPLICATION_JSON)).andReturn().getResponse();
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
