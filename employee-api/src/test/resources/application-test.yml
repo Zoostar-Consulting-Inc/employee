@@ -19,9 +19,9 @@ logs:
 spring:
   datasource:
     driver-class-name: org.h2.Driver
-    password: ${metadata.datasource.password}
+    password: S3cret$
     url: jdbc:h2:mem:employee-db-test
-    username: ${user.name}
+    username: junit
   jpa:
     defer-datasource-initialization: true
     open-in-view: false

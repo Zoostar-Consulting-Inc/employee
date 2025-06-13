@@ -1,4 +1,5 @@
 package com.zoostarinc.employee.dao.entity;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.Persistable;
