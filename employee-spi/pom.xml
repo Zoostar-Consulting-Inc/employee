@@ -30,7 +30,6 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-oauth2-client</artifactId>
-			<version>6.4.6</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
