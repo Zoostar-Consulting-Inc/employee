@@ -2,7 +2,6 @@ package com.zoostarinc.employee.api.rest;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,20 +22,20 @@ import com.zoostarinc.employee.service.EmployeeService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import net.zoostar.common.audit.Timeable;
 import net.zoostar.common.transform.Transformer;
 import net.zoostar.common.web.response.SuccessfulRequestLoggerResponseEntity;
 
 @Timeable
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class EmployeeController {
 
-	@Autowired
-	ObjectMapper om;
+	final ObjectMapper om;
 
-	@Autowired
-	EmployeeService employeeManager;
+	final EmployeeService employeeManager;
 
 	@ApiResponses(value = { @ApiResponse(responseCode = "201", description = "Employee created successfully."),
 			@ApiResponse(responseCode = "400", description = "Bad data provided. Fix and retry.") })

@@ -1,5 +1,4 @@
 package com.zoostarinc.employee.dao.entity;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import org.springframework.data.domain.Persistable;
@@ -34,6 +33,12 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	@GeneratedValue(strategy = GenerationType.UUID)
 	public UUID getId() {
 		return this.id;
+	}
+
+	@Override
+	@Column(name = "EMAIL")
+	public String getEmail() {
+		return super.getEmail();
 	}
 
 	@Override
