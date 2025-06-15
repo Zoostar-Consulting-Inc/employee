@@ -33,13 +33,12 @@ spring:
       mode: always
       platform: h2
       schema-locations: classpath*:schema-h2.sql
-
   security:
     oauth2:
       client:
-      registration:
-        google:
-          clientId: 975234666406-hmg1912b5i90ip1151o5phm9iim416rv.apps.googleusercontent.com
-          clientSecret: ${client.secret.google}
-          scope: openid,profile,email
+        registration:
+          google:
+            clientId: 975234666406-hmg1912b5i90ip1151o5phm9iim416rv.apps.googleusercontent.com
+            clientSecret: ${client.secret.google}
+            scope: openid,profile,email
 # --- xxx ---
