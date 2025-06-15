@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -14,6 +15,7 @@ import lombok.Generated;
 
 @Generated
 @SpringBootApplication
+@EnableWebSecurity
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = { "net.zoostar", "com.zoostarinc" })
 public class EmployeeApi extends SpringBootServletInitializer {
