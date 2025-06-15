@@ -8,7 +8,7 @@ import com.zoostarinc.employee.service.impl.EmployeeServiceImpl;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @ToString
 @AllArgsConstructor
@@ -18,7 +18,7 @@ public class EmployeeRequestTransformer implements Transformer<Employee> {
 	
 	@Override
 	public Employee transform() {
-		if(!StringUtils.hasText(request.getUsername())) {
+		if(!StringUtils.hasText(request.getEmail())) {
 			throw new IllegalArgumentException(EmployeeServiceImpl.REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 		return request;

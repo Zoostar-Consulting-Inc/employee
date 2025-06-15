@@ -1,6 +1,4 @@
 package com.zoostarinc.employee.dao.entity;
-
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.data.domain.Persistable;
@@ -38,6 +36,7 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	}
 
 	@Override
+	@Column(name = "EMAIL")
 	public String getEmail() {
 		return super.getEmail();
 	}
@@ -55,31 +54,9 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	}
 
 	@Override
-	public String getUsername() {
-		return super.getUsername();
-	}
-	
-	@Override
 	@Transient
 	public boolean isNew() {
 		return id == null;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getUsername());
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof EmployeeEntity)) {
-			return false;
-		}
-		EmployeeEntity other = (EmployeeEntity) obj;
-		return Objects.equals(getUsername(), other.getUsername());
 	}
 
 }

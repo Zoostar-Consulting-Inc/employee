@@ -1,6 +1,7 @@
 package com.zoostarinc.employee.service.impl;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -13,7 +14,7 @@ import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @Slf4j
 @Service
@@ -28,9 +29,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Transactional
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		var value = employeeRepository.findByUsername(employee.getUsername());
-		if (value.isPresent()) {
-			throw new DuplicateKeyException("Employee exists with given username!");
+		var row = employeeRepository.findByEmail(employee.getEmail());
+		if (row.isPresent()) {
+			throw new DuplicateKeyException("Employee exists with given email!");
 		}
 
 		log.info("Creating new employee: {}", employee);
@@ -38,22 +39,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
-	public EmployeeEntity retrieveByUsername(String username) {
-		if (!StringUtils.hasText(username)) {
+	public EmployeeEntity retrieveByEmail(String email) {
+		if (!StringUtils.hasText(email)) {
 			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 
-		return employeeRepository.findByUsername(username)
-				.orElseThrow(() -> new IllegalArgumentException("No employee found by given username!"));
+		return employeeRepository.findByEmail(email)
+				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given username!", 1));
 	}
 
 	@Override
 	@Transactional
 	public EmployeeEntity update(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
-		var entity = retrieveByUsername(employee.getUsername());
+		var entity = retrieveByEmail(employee.getEmail());
 		log.info("Updating existing employee: {}", entity);
-		entity.setEmail(employee.getEmail());
 		entity.setFirstName(employee.getFirstName());
 		entity.setLastName(employee.getLastName());
 		return entity;

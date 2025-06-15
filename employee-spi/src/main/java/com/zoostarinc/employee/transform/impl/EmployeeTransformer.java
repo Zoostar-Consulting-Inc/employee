@@ -8,7 +8,7 @@ import com.zoostarinc.employee.model.Employee;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.zoostar.common.core.Transformer;
+import net.zoostar.common.transform.Transformer;
 
 @Slf4j
 @Getter
@@ -23,7 +23,6 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 		entity.setEmail(employee.getEmail());
 		entity.setFirstName(employee.getFirstName());
 		entity.setLastName(employee.getLastName());
-		entity.setUsername(employee.getUsername());
 		log.info("Employee Entity: {}", entity);
 		return entity;
 	}
