@@ -1,5 +1,7 @@
 package com.zoostarinc.employee;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -7,15 +9,18 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import lombok.Generated;
 
 @Generated
-@SpringBootApplication
 @EnableWebSecurity
+@SpringBootApplication
 @EnableAspectJAutoProxy
 @ComponentScan(basePackages = { "net.zoostar", "com.zoostarinc" })
 public class EmployeeApi extends SpringBootServletInitializer {
@@ -23,7 +28,7 @@ public class EmployeeApi extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(EmployeeApi.class, args);
 	}
-	
+
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(EmployeeApi.class);
@@ -31,7 +36,15 @@ public class EmployeeApi extends SpringBootServletInitializer {
 
 	@Bean
 	OpenAPI openAPI() {
-		return new OpenAPI().info(new Info().title("Employee CRUD API"));
+		return new OpenAPI().info(new Info().title("Employee API")
+				.description("This API provides CRUD operations for Employees with OAuth2 security."));
+	}
+
+	@Bean
+	SecurityFilterChain filterChain(HttpSecurity hs) throws Exception {
+		return hs.cors(withDefaults()).csrf(AbstractHttpConfigurer::disable)
+				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated()).oauth2Login(withDefaults())
+				.build();
 	}
 
 }
