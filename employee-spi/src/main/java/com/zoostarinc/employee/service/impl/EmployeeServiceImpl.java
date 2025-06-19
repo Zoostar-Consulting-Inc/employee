@@ -1,5 +1,6 @@
 package com.zoostarinc.employee.service.impl;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,7 @@ import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 import com.zoostarinc.employee.service.EmployeeService;
-import com.zoostarinc.employee.transform.impl.EmployeeTransformer;
+import com.zoostarinc.employee.transformer.impl.EmployeeTransformer;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	@Transactional
+	@Cacheable("create")
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
 		var row = employeeRepository.findByEmail(employee.getEmail());
@@ -39,6 +41,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 	}
 
 	@Override
+	@Cacheable("retrieveByEmail")
 	public EmployeeEntity retrieveByEmail(String email) {
 		if (!StringUtils.hasText(email)) {
 			throw new IllegalArgumentException(REQUIRED_FIELD_MISSING_ERROR_MSG);
@@ -46,17 +49,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 		return employeeRepository.findByEmail(email)
 				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given username!", 1));
-	}
-
-	@Override
-	@Transactional
-	public EmployeeEntity update(Transformer<Employee> transformer) {
-		var employee = transformer.transform();
-		var entity = retrieveByEmail(employee.getEmail());
-		log.info("Updating existing employee: {}", entity);
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
-		return entity;
 	}
 
 }

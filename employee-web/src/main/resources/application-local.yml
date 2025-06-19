@@ -1,0 +1,48 @@
+# --- Spring Boot specific properties ---
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 2048
+# --- xxx ---
+
+# --- Application specific properties per environment ---
+logging:
+  level:
+    root: info
+    org:
+      aspectj: trace
+      springframework:
+        cache: trace
+    '[net.zoostar]': trace
+
+logs:
+  base:
+    dir: logs
+    
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    password: ${employee.datasource.password}
+    url: jdbc:h2:mem:employee
+    username: spring-boot-local
+  jpa:
+    defer-datasource-initialization: true
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: always
+      platform: h2
+      schema-locations: classpath*:schema-h2.sql
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 547141362195-p1jmnki19qbp67nfvblbl3b7gk2oj4fl.apps.googleusercontent.com
+            clientSecret: ${client.secret.google}
+            scope: openid,profile,email
+# --- xxx ---
