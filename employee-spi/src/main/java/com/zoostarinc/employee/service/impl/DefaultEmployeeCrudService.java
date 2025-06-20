@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
-import com.zoostarinc.employee.service.EmployeeService;
+import com.zoostarinc.employee.service.EmployeeCrudService;
 import com.zoostarinc.employee.transformer.impl.EmployeeTransformer;
 
 import jakarta.transaction.Transactional;
@@ -20,7 +20,7 @@ import net.zoostar.common.transform.Transformer;
 @Slf4j
 @Service
 @AllArgsConstructor
-public class EmployeeServiceImpl implements EmployeeService {
+public class DefaultEmployeeCrudService implements EmployeeCrudService {
 
 	public static final String REQUIRED_FIELD_MISSING_ERROR_MSG = "Required field [username] is missing in request!";
 
@@ -28,7 +28,6 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 	@Override
 	@Transactional
-	@Cacheable("create")
 	public EmployeeEntity create(Transformer<Employee> transformer) {
 		var employee = transformer.transform();
 		var row = employeeRepository.findByEmail(employee.getEmail());

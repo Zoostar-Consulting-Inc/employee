@@ -4,7 +4,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
-import com.zoostarinc.employee.service.EmployeeService;
+import com.zoostarinc.employee.service.EmployeeCrudService;
 import com.zoostarinc.employee.service.SwaggerService;
 import com.zoostarinc.employee.transformer.impl.OidcUserTransformer;
 
@@ -18,7 +18,7 @@ public class DefaultSwaggerService implements SwaggerService {
 
 	private static final String SWAGGER_URL = "swagger-ui/index.html";
 	
-	final EmployeeService employeeManager;
+	final EmployeeCrudService employeeManager;
 
 	@Override
 	public String getRedirectUrl(OidcUser user) {

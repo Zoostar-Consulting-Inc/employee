@@ -7,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.EnableLoadTimeWeaving;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -20,8 +18,6 @@ import lombok.Generated;
 @EnableCaching
 @EnableWebSecurity
 @SpringBootApplication
-@EnableLoadTimeWeaving
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 @ComponentScan(basePackages = { "net.zoostar", "com.zoostarinc" })
 public class EmployeeWebApp {
 

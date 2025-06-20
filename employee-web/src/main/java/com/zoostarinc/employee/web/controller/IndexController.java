@@ -16,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.zoostarinc.employee.service.EmployeeService;
-import com.zoostarinc.employee.transformer.impl.OidcUserTransformer;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
@@ -69,7 +68,7 @@ public class IndexController implements ApplicationContextAware {
 		model.addAttribute("buildVersion", buildVersion);
 		
 		try {
-			var entity = employeeManager.create(new OidcUserTransformer(user));
+			var entity = employeeManager.createIfNotFound(user);
 			log.info("Nice to meet you {}!", entity.getFirstName());
 		} catch (DuplicateKeyException e) {
 			log.info("Welcome back {}!", user.getGivenName());

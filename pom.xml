@@ -9,14 +9,13 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>3.4.0-SNAPSHOT</version>
+		<version>3.3.2</version>
 		<relativePath />
 	</parent>
 	<modules>
-<!--		<module>employee-api</module>-->
+		<module>employee-web</module>
 		<module>employee-spi</module>
 		<module>employee-core</module>
-		<module>employee-web</module>
 	</modules>
 	<dependencies>
 		<dependency>
