@@ -1,16 +1,9 @@
 package com.zoostarinc.employee.service;
 
-import com.zoostarinc.employee.dao.entity.EmployeeEntity;
-import com.zoostarinc.employee.model.Employee;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
-import net.zoostar.common.transform.Transformer;
+import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 
 public interface EmployeeService {
-
-	EmployeeEntity create(Transformer<Employee> transformer);
-
-	EmployeeEntity retrieveByEmail(String email);
-
-	EmployeeEntity update(Transformer<Employee> transformer);
-
+	EmployeeEntity createIfNotFound(OidcUser user);
 }

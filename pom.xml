@@ -9,11 +9,11 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.3.2</version>
 		<relativePath />
 	</parent>
 	<modules>
-		<module>employee-api</module>
+		<module>employee-web</module>
 		<module>employee-spi</module>
 		<module>employee-core</module>
 	</modules>
@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>net.zoostar.common</groupId>
 			<artifactId>zoostar-common</artifactId>
-			<version>3.2.0</version>
+			<version>3.3.2</version>
 		</dependency>
 	</dependencies>
 </project>
