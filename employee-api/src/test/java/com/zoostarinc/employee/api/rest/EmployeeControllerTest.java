@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
-import com.zoostarinc.employee.api.request.EmployeeRequest;
-import com.zoostarinc.employee.api.response.EmployeeResponse;
+import com.zoostarinc.api.request.EmployeeRequest;
+import com.zoostarinc.api.response.EmployeeResponse;
 import com.zoostarinc.employee.config.AbstractTestHarness;
 import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 

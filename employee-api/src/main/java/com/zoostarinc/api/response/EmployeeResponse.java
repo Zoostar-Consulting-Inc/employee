@@ -1,4 +1,4 @@
-package com.zoostarinc.employee.api.response;
+package com.zoostarinc.api.response;
 
 import com.zoostarinc.employee.model.Employee;
 

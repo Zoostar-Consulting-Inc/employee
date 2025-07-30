@@ -52,7 +52,7 @@ public class IndexController implements ApplicationContextAware {
 	 * @param model
 	 * @return greeting message
 	 */
-	@Timeable(threshold = 100)
+	@Timeable
 	@GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
 	public String greeting(@AuthenticationPrincipal DefaultOidcUser user, Model model, HttpSession session) {
 		String homepage = "index";

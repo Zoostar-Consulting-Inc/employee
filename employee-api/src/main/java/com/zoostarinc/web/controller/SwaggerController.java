@@ -1,4 +1,4 @@
-package com.zoostarinc.employee.web.controller;
+package com.zoostarinc.web.controller;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

@@ -47,7 +47,7 @@ public class DefaultEmployeeCrudService implements EmployeeCrudService {
 		}
 
 		return employeeRepository.findByEmail(email)
-				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given username!", 1));
+				.orElseThrow(() -> new EmptyResultDataAccessException("No employee found by given email!", 1));
 	}
 
 }

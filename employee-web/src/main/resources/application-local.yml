@@ -10,11 +10,11 @@ server:
 logging:
   level:
     root: info
-    org:
-      aspectj: trace
-      springframework:
-        cache: trace
+    '[com.zoostarinc]': trace
     '[net.zoostar]': trace
+    '[org.aspectj]': trace
+    '[org.springframework.cache]': trace
+    '[org.springframework.transaction]': trace
 
 logs:
   base:
