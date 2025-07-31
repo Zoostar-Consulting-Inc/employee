@@ -7,17 +7,23 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 import lombok.Generated;
+import lombok.extern.slf4j.Slf4j;
+import net.zoostar.common.audit.TimeableAspect;
 
+@Slf4j
 @Generated
 @EnableCaching
 @EnableWebSecurity
 @SpringBootApplication
+@EnableAspectJAutoProxy
+//@EnableTransactionManagement
 @ComponentScan(basePackages = { "net.zoostar", "com.zoostarinc" })
 public class EmployeeWebApp {
 
@@ -30,6 +36,12 @@ public class EmployeeWebApp {
 		return hs.cors(withDefaults()).csrf(AbstractHttpConfigurer::disable)
 				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated()).oauth2Login(withDefaults())
 				.build();
+	}
+	
+	@Bean
+	TimeableAspect timeable() {
+		log.info("{}...", "Creating Timeable Aspect");
+		return new TimeableAspect();
 	}
 
 }

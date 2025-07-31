@@ -1,4 +1,4 @@
-package com.zoostarinc.employee;
+package com.zoostarinc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

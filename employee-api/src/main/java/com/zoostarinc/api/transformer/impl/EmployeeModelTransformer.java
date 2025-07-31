@@ -1,6 +1,6 @@
-package com.zoostarinc.employee.api.transformer.impl;
+package com.zoostarinc.api.transformer.impl;
 
-import com.zoostarinc.employee.api.response.EmployeeResponse;
+import com.zoostarinc.api.response.EmployeeResponse;
 import com.zoostarinc.employee.model.Employee;
 
 import lombok.AllArgsConstructor;

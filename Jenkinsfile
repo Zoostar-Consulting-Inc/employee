@@ -5,7 +5,7 @@ pipeline {
         stage('Verify') {
 			steps {
 				script {
-					if("opened" == "$action" || "synchronize" == "$action" || "edited" == "$action") {
+					if("opened" == "$action" || "synchronize" == "$action" || "edited" == "$action" || "create" == "$action") {
 						bat 'mvn -U -B verify -Duser.name=%BUILD_NUMBER%'
 					}
 				}

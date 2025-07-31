@@ -1,4 +1,12 @@
 spring:
   profiles:
     active:
-      - local
+      - local #spring boot profile
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            clientId: 547141362195-3qarknq5dhtdm4q8uv1cfovfrisf7d4u.apps.googleusercontent.com
+            clientSecret: ${client.secret.google.employee-api}
+            scope: openid,profile,email

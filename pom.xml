@@ -9,19 +9,38 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>3.3.2</version>
+		<version>3.5.0-SNAPSHOT</version>
 		<relativePath />
 	</parent>
 	<modules>
 		<module>employee-web</module>
+		<module>employee-api</module>
 		<module>employee-spi</module>
 		<module>employee-core</module>
 	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>net.zoostar.common</groupId>
+				<artifactId>zoostar-common</artifactId>
+				<version>3.5.0-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>com.zoostarinc.employee</groupId>
+				<artifactId>employee-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.zoostarinc.employee</groupId>
+				<artifactId>employee-spi</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>net.zoostar.common</groupId>
 			<artifactId>zoostar-common</artifactId>
-			<version>3.3.2</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -1,10 +1,10 @@
-package com.zoostarinc.employee.api.transformer.impl;
+package com.zoostarinc.api.transformer.impl;
 
 import org.springframework.util.StringUtils;
 
-import com.zoostarinc.employee.api.request.EmployeeRequest;
+import com.zoostarinc.api.request.EmployeeRequest;
 import com.zoostarinc.employee.model.Employee;
-import com.zoostarinc.employee.service.impl.EmployeeServiceImpl;
+import com.zoostarinc.employee.service.impl.DefaultEmployeeCrudService;
 
 import lombok.AllArgsConstructor;
 import lombok.ToString;
@@ -19,7 +19,7 @@ public class EmployeeRequestTransformer implements Transformer<Employee> {
 	@Override
 	public Employee transform() {
 		if(!StringUtils.hasText(request.getEmail())) {
-			throw new IllegalArgumentException(EmployeeServiceImpl.REQUIRED_FIELD_MISSING_ERROR_MSG);
+			throw new IllegalArgumentException(DefaultEmployeeCrudService.REQUIRED_FIELD_MISSING_ERROR_MSG);
 		}
 		return request;
 	}
