@@ -9,7 +9,7 @@
 	<parent>
 		<groupId>net.zoostar.boot</groupId>
 		<artifactId>zoostar-boot-starter-parent</artifactId>
-		<version>3.5.0-SNAPSHOT</version>
+		<version>3.3.0</version>
 		<relativePath />
 	</parent>
 	<modules>
@@ -23,7 +23,7 @@
 			<dependency>
 				<groupId>net.zoostar.common</groupId>
 				<artifactId>zoostar-common</artifactId>
-				<version>3.5.0-SNAPSHOT</version>
+				<version>3.3.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.zoostarinc.employee</groupId>
