@@ -22,5 +22,7 @@ public class Timesheet implements Workflowable {
 	private LocalDate weekEnding;
 	
 	private int totalHours;
+	
+	private String action;
 
 }
