@@ -10,7 +10,6 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,7 +21,6 @@ import com.zoostarinc.employee.model.Employee;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("test")
 public abstract class AbstractTestHarness {
 
 	protected static OidcUserInfo userInfo;
@@ -31,7 +29,7 @@ public abstract class AbstractTestHarness {
 
 	protected ObjectMapper om = objectMapper();
 
-	protected Employee employee = employee("devops@zoostar.net", "Dev", "Ops");
+	protected Employee employee = employee("devops@zoostar.net");
 
 	protected EmployeeEntity persistableEmployeeEntity = employeeEntity(null, employee);
 
@@ -43,19 +41,15 @@ public abstract class AbstractTestHarness {
 	@Autowired
 	protected MockMvc endpoint;
 
-	public static Employee employee(String email, String firstName, String lastName) {
+	public static Employee employee(String email) {
 		var employee = new Employee();
 		employee.setEmail(email);
-		employee.setFirstName(firstName);
-		employee.setLastName(lastName);
 		return employee;
 	}
 
 	public static EmployeeEntity employeeEntity(UUID id, Employee employee) {
 		var entity = new EmployeeEntity(id);
 		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
 		return entity;
 	}
 
@@ -66,8 +60,7 @@ public abstract class AbstractTestHarness {
 	}
 
 	public static OidcUser testOidcUser(Employee employee) {
-		var info = OidcUserInfo.builder().email(employee.getEmail()).givenName(employee.getFirstName())
-				.familyName(employee.getLastName()).build();
+		var info = OidcUserInfo.builder().email(employee.getEmail()).build();
 		return new DefaultOidcUser(AuthorityUtils.createAuthorityList("SCOPE_message:read"),
 				OidcIdToken.withTokenValue("id-token").claim("sub", "user").build(), info);
 

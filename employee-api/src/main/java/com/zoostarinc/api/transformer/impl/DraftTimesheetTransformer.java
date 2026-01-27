@@ -23,8 +23,6 @@ public class DraftTimesheetTransformer implements Transformer<Timesheet> {
 	public Timesheet transform() {
 		var employee = new Employee();
 		employee.setEmail(user.getEmail());
-		employee.setFirstName(user.getGivenName());
-		employee.setLastName(user.getFamilyName());
 
 		var timesheet = new Timesheet();
 		timesheet.setEmployee(employee);

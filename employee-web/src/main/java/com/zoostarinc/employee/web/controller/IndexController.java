@@ -15,7 +15,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.zoostarinc.employee.service.EmployeeService;
+import com.zoostarinc.employee.service.SwaggerService;
+import com.zoostarinc.employee.transformer.impl.OidcUserTransformer;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.Getter;
@@ -43,8 +44,8 @@ public class IndexController implements ApplicationContextAware {
 	protected String buildVersion;
 
 	protected ApplicationContext applicationContext;
-	
-	protected final EmployeeService employeeManager;
+
+	protected final SwaggerService swaggerManager;
 
 	/**
 	 * 
@@ -66,10 +67,11 @@ public class IndexController implements ApplicationContextAware {
 		model.addAttribute("buildName", buildName);
 		model.addAttribute("buildTimestamp", buildTimestamp);
 		model.addAttribute("buildVersion", buildVersion);
-		
+
 		try {
-			var entity = employeeManager.createIfNotFound(user);
-			log.info("Nice to meet you {}!", entity.getFirstName());
+			var entity = swaggerManager.createIfNotFound(new OidcUserTransformer(user));
+			log.debug("Found entity: {}", entity);
+			log.info("Nice to meet you {}!", user.getName());
 		} catch (DuplicateKeyException e) {
 			log.info("Welcome back {}!", user.getGivenName());
 		}

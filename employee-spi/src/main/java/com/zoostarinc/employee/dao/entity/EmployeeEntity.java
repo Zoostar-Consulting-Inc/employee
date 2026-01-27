@@ -29,6 +29,10 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 		this.id = id;
 	}
 
+	public EmployeeEntity(String email) {
+		super(email);
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	public UUID getId() {
@@ -39,18 +43,6 @@ public class EmployeeEntity extends Employee implements Persistable<UUID> {
 	@Column(name = "EMAIL")
 	public String getEmail() {
 		return super.getEmail();
-	}
-
-	@Override
-	@Column(name = "FIRST_NAME")
-	public String getFirstName() {
-		return super.getFirstName();
-	}
-
-	@Override
-	@Column(name = "LAST_NAME")
-	public String getLastName() {
-		return super.getLastName();
 	}
 
 	@Override

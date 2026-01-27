@@ -17,8 +17,6 @@ public class TimesheetResponseTransformer implements Transformer<TimesheetRespon
 	public TimesheetResponse transform() {
 		var employee = new Employee();
 		employee.setEmail(timesheet.getEmployee().getEmail());
-		employee.setFirstName(timesheet.getEmployee().getFirstName());
-		employee.setLastName(timesheet.getEmployee().getLastName());
 		
 		var response = new TimesheetResponse();
 		response.setEmployee(employee);

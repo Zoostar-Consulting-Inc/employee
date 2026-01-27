@@ -1,3 +1,8 @@
+build:
+  name: '@build.number@'
+  version: '@project.version@'
+  timestamp: '@build.timestamp@'
+
 spring:
   profiles:
     active:
@@ -8,5 +13,5 @@ spring:
         registration:
           google:
             clientId: 547141362195-3qarknq5dhtdm4q8uv1cfovfrisf7d4u.apps.googleusercontent.com
-            clientSecret: ${client.secret.google.employee-api}
+            clientSecret: ${client.secret.employee-api.google}
             scope: openid,profile,email

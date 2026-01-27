@@ -27,8 +27,6 @@ public class OidcUserTransformer implements Transformer<Employee> {
 		
 		var employee = new Employee();
 		employee.setEmail(user.getEmail().trim().toLowerCase());
-		employee.setFirstName(user.getGivenName() == null ? "" : user.getGivenName().trim());
-		employee.setLastName(user.getFamilyName() == null ? "" : user.getFamilyName().trim());
 		return employee;
 	}
 
