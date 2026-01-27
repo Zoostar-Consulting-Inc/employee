@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
@@ -19,6 +20,7 @@ import com.zoostarinc.employee.dao.entity.EmployeeEntity;
 import com.zoostarinc.employee.dao.repository.EmployeeRepository;
 import com.zoostarinc.employee.model.Employee;
 
+@Profile("test")
 @SpringBootTest
 @AutoConfigureMockMvc
 public abstract class AbstractTestHarness {

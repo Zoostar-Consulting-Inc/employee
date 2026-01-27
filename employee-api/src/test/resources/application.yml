@@ -1,0 +1,9 @@
+build:
+  name: '@build.number@'
+  version: '@project.version@'
+  timestamp: '@build.timestamp@'
+
+spring:
+  profiles:
+    active:
+      - test
