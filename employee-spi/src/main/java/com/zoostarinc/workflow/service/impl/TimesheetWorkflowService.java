@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import com.zoostarinc.employee.transformer.impl.TimesheetEntityTransformer;
 import com.zoostarinc.employee.transformer.impl.TimesheetTransformer;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import net.zoostar.common.transform.Transformer;
+import net.zoostar.common.workflow.Action;
+import net.zoostar.common.workflow.State;
 import net.zoostar.common.workflow.WorkflowService;
 
 @Slf4j
@@ -27,9 +30,10 @@ public class TimesheetWorkflowService implements WorkflowService<Timesheet> {
 
 	@Override
 	@Transactional
-	public Timesheet process(String doAction, Transformer<Timesheet> transformer) {
+	public Timesheet process(Transformer<Timesheet> transformer) {
 		TimesheetEntity entity = null;
 		var timesheet = transformer.transform();
+		var doAction = timesheet.getAction();
 		var state = timesheet.getState();
 		var actions = state.getActions();
 
@@ -37,9 +41,7 @@ public class TimesheetWorkflowService implements WorkflowService<Timesheet> {
 			entity = timesheetCrudManager.retrieveByEmailAndWeekEnding(timesheet.getEmployee().getEmail(),
 					timesheet.getWeekEnding());
 			log.info("Updating existing timesheet: {}", entity);
-			if (doAction == null) {
-				timesheet.setTotalHours(entity.getHours());
-			} else {
+			if (StringUtils.hasText(doAction)) {
 				for (var action : actions) {
 					if (action.getName().equals(doAction)) {
 						action.execute(timesheet);
@@ -47,6 +49,8 @@ public class TimesheetWorkflowService implements WorkflowService<Timesheet> {
 						break;
 					}
 				}
+			} else {
+				timesheet.setTotalHours(entity.getHours());
 			}
 		} catch (NoSuchElementException e) {
 			log.info("Creating new timesheet: {}", timesheet);
@@ -59,6 +63,18 @@ public class TimesheetWorkflowService implements WorkflowService<Timesheet> {
 	private void update(Timesheet timesheet, TimesheetEntity entity) {
 		entity.setHours(timesheet.getTotalHours());
 		entity.setState(timesheet.getState().getName());
+	}
+
+	@Override
+	public State<Timesheet> getState(String state) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Action<Timesheet> getAction(String action) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

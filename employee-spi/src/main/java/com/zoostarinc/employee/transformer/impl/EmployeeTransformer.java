@@ -19,8 +19,6 @@ public class EmployeeTransformer implements Transformer<EmployeeEntity> {
 	public EmployeeEntity transform() {
 		var entity = new EmployeeEntity();
 		entity.setEmail(employee.getEmail());
-		entity.setFirstName(employee.getFirstName());
-		entity.setLastName(employee.getLastName());
 		log.info("Employee Entity: {}", entity);
 		return entity;
 	}
